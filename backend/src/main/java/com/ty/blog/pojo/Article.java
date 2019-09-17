@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @ClassName: Article
@@ -118,39 +119,48 @@ public class Article implements Serializable {
     private Long readCount;
 
     /**
-     * 文章是否可以评论，0不能1可以
+     * 文章首图URL
      */
-    @Column(name = "is_comment", nullable = false)
-    private Long isComment;
+    @Column(name = "article_img")
+    private String articleImg;
 
     /**
-     * 文章浏览密码
+     * 文章是否可以评论，0不能1可以
      */
-    @Column(name = "read_password", nullable = false)
+    @Column(name = "is_comment", nullable = false, length = 1)
+    private String isComment;
+
+    /**
+     * 文章浏览密码，没有密码表示公开
+     */
+    @Column(name = "read_password")
     private String readPassword;
 
     /**
-     * 文章状态，是否私密,0私密1公开
+     * 文章是否可以浏览 0不可以，1表示公开
      */
-    @Column(name = "article_state", nullable = false)
-    private Long articleState;
+    @Column(name = "is_read", nullable = false, length = 1)
+    private String isRead;
 
     /**
-     * 最后一次登录时间
+     * 文章状态,0草稿1已发布
      */
-    @Column(name = "last_login_time", nullable = false)
-    private String lastLoginTime;
+    @Column(name = "article_state", nullable = false, length = 1)
+    private String articleState;
+
 
     /**
      * 创建时间
      */
-    @Column(name = "create_time",nullable = false,length = 30)
-    private String createTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_time",nullable = false)
+    private Date createTime;
 
     /**
      * 最后修改时间
      */
-    @Column(name = "modify_time",nullable = false,length = 30)
-    private String modifyTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_time",nullable = false)
+    private Date modifyTime;
 
 }

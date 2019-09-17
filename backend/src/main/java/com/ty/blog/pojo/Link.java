@@ -11,51 +11,56 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @ClassName: Comment
- * @Description: 评论表
+ * @ClassName: Link
+ * @Description: 友情链接表
  * @author zhangtainyi
- * @date 2019/9/17 16:56
+ * @date 2019/9/17 10:24
  *
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = TableNameConsts.TY_COMMENT)
-@Table(name = TableNameConsts.TY_COMMENT)
-public class Comment implements Serializable {
+@Entity(name = TableNameConsts.TY_LINK)
+@Table(name = TableNameConsts.TY_LINK)
+public class Link implements Serializable {
 
     /**
-     * 主键自增
+     * 主键
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 评论人用户名
+     * 链接标题
      */
-    @Column(name = "comment_username", nullable = false)
-    private Long commentUsername;
+    @Column(name = "link_title",unique = true,nullable = false)
+    private String linkTitle;
 
     /**
-     * 评论人链接
+     * 链接地址
      */
-    @Column(name = "comment_username_url", nullable = false)
-    private Long commentUsernameUrl;
+    @Column(name = "link_address",unique = true,nullable = false)
+    private String linkAddress;
 
     /**
-     * 父评论id
+     * 链接描述
      */
-    @Column(name = "comment_parent_id", nullable = false)
-    private Long commentParentId;
+    @Column(name = "link_desc",unique = true,nullable = false)
+    private String linkDesc;
 
     /**
-     * 父评论人链接
+     * 链接序号，大的排前面
      */
-    @Column(name = "comment_parent_username", nullable = false)
-    private Long commentParentUsername;
+    @Column(name = "link_order",unique = true,nullable = false)
+    private String linkOrder;
 
+    /**
+     * 是否置顶，多个置顶取链接序号大的
+     */
+    @Column(name = "is_top",unique = true,nullable = false)
+    private String isTop;
 
     /**
      * 创建时间

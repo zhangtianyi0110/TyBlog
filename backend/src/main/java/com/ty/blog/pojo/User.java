@@ -3,7 +3,9 @@ package com.ty.blog.pojo;
 import com.ty.blog.constant.TableNameConsts;
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @ClassName: User
@@ -48,7 +50,7 @@ public class User implements Serializable {
     /**
      * 名字
      */
-    @Column(name = "name",nullable = false)
+    @Column(name = "name")
     private String name;
 
     /**
@@ -60,19 +62,20 @@ public class User implements Serializable {
     /**
      * 生日
      */
-    @Column(name = "birthday",nullable = false)
-    private String birthday;
+    @Column(name = "birthday")
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
 
     /**
      * 邮箱
      */
-    @Column(name = "email",nullable = false)
+    @Column(name = "email")
     private String email;
 
     /**
      * 个人简介
      */
-    @Column(name = "personal_profile",nullable = false)
+    @Column(name = "personal_profile")
     private String personalProfile;
 
     /**
@@ -96,20 +99,23 @@ public class User implements Serializable {
     /**
      * 最后一次登录时间
      */
-    @Column(name = "last_login_time",nullable = false,length = 30)
-    private String lastLoginTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_login_time")
+    private Date lastLoginTime;
 
     /**
      * 创建时间
      */
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time",nullable = false,length = 30)
-    private String createTime;
+    private Date createTime;
 
     /**
      * 最后修改时间
      */
-    @Column(name = "modify_time",nullable = false,length = 30)
-    private String modifyTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_time",nullable = false)
+    private Date modifyTime;
 
 
 

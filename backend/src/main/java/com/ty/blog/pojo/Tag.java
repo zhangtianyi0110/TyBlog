@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @ClassName: Tag
@@ -40,13 +41,15 @@ public class Tag implements Serializable {
     /**
      * 创建时间
      */
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time",nullable = false,length = 30)
-    private String createTime;
+    private Date createTime;
 
     /**
      * 最后修改时间
      */
-    @Column(name = "modify_time",nullable = false,length = 30)
-    private String modifyTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_time",nullable = false)
+    private Date modifyTime;
 
 }
