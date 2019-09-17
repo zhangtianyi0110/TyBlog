@@ -8,7 +8,7 @@ import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtConfig;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtUtil;
-import com.ty.blog.util.MD5Utils;
+import com.ty.blog.util.Md5Utils;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -21,6 +21,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @ClassName: LoginController
+ * @Description: 登录功能controller
+ * @author zhangtainyi
+ * @date 2019/9/17 16:22
+ *
+ */
 @RestController
 public class LoginController extends BaseController {
 
@@ -46,7 +53,7 @@ public class LoginController extends BaseController {
     public ResponseData login(User user) throws Exception{
         log.info("开始认证...");
         String username = user.getUsername();
-        String password = MD5Utils.encrypt(user.getPassword(),username);
+        String password = Md5Utils.encrypt(user.getPassword(),username);
         String realPassword = userService.findByUsername(username).getPassword();
         if (realPassword == null) {
             throw new UnknownAccountException();

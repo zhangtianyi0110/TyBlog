@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @ClassName: Comment
- * @Description: 评论表
+ * @ClassName: Category
+ * @Description: 分类表
  * @author zhangtainyi
  * @date 2019/9/17 16:56
  *
@@ -20,9 +20,9 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = TableNameConsts.TY_COMMENT)
-@Table(name = TableNameConsts.TY_COMMENT)
-public class Comment implements Serializable {
+@Entity(name = TableNameConsts.TY_CATEGORY)
+@Table(name = TableNameConsts.TY_CATEGORY)
+public class Category implements Serializable {
 
     /**
      * 主键自增
@@ -32,10 +32,10 @@ public class Comment implements Serializable {
     private Long id;
 
     /**
-     * 评论id
+     * 分类名
      */
-    @Column(name = "comment_id", unique = true, nullable = false)
-    private Long commentId;
+    @Column(name = "category_name",unique = true,nullable = false)
+    private String categoryName;
 
     /**
      * 创建时间

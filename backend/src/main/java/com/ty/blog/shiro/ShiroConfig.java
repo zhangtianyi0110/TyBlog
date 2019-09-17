@@ -17,6 +17,7 @@ import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
+
 /**
  *  @ClassName: ShiroConfig
  *  @Description: Shiro配置类
@@ -24,8 +25,12 @@ import java.util.LinkedHashMap;
  *  @Date: 2019-09-04 21:02
  *
  */
+
 @Configuration
-@DependsOn({"jwtConfig","redisConfig"})//在JwtProperties后加载
+/**
+ * 在JwtProperties后加载
+ */
+@DependsOn({"jwtConfig","redisConfig"})
 public class ShiroConfig {
     private Logger log = LoggerFactory.getLogger(ShiroConfig.class);
 
@@ -49,24 +54,16 @@ public class ShiroConfig {
 
 
     /**
-     * redis缓存管理器
-     * @return CustomRedisCacheManager
-     */
-    public ShiroRedisCacheManager reidsCacheManager() {
-        ShiroRedisCacheManager shiroRedisCacheManager = new ShiroRedisCacheManager();
-        return shiroRedisCacheManager;
-    }
-
-
-    /**
      * 注入自定义realm、EhCacheManager/ReidsCacheManager对象
      * @return SecurityManager
      */
     @Bean
     public DefaultWebSecurityManager securityManager(){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(customRealm());//注入自定义Realm
-        securityManager.setCacheManager(shiroRedisCacheManager);//注入RedisCacheManager
+        //注入自定义Realm
+        securityManager.setRealm(customRealm());
+        //注入RedisCacheManager
+        securityManager.setCacheManager(shiroRedisCacheManager);
         return securityManager;
     }
 
@@ -84,14 +81,19 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
-    //配置shiro的web过滤器,是shiro的核心配置,shiro的所有功能都基于这个对象
+    /**
+     * 配置shiro的web过滤器,是shiro的核心配置,shiro的所有功能都基于这个对象
+     * @param securityManager
+     * @return
+     */
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setSuccessUrl("/index");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized/**");//无权限跳转
+        //无权限跳转
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized/**");
         // 在 Shiro过滤器链上加入 JwtFilter
         LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
         filters.put("jwt", new JwtFilter(jwtRedisCache, jwtConfig));

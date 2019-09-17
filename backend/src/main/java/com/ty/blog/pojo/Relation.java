@@ -8,33 +8,43 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 /**
- * @ClassName: Perm
- * @Description: 权限实体
+ * @ClassName: Relation
+ * @Description: 关系表
  * @author zhangtainyi
- * @date 2019/9/16 11:51
+ * @date 2019/9/17 11:06
  *
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = TableNameConsts.TY_PERM)
-@Table(name = TableNameConsts.TY_PERM)
-public class Perm implements Serializable {
+@Entity(name = TableNameConsts.TY_RELATION)
+@Table(name = TableNameConsts.TY_RELATION)
+public class Relation implements Serializable {
 
-  /**
-   * 主键自增
-   */
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
   private int id;
 
   /**
-   * 权限名
+   * 关系类型，格式：（表名_表名）
    */
-  @Column(name = "perm",unique = true,nullable = false)
-  private String perm;
+  @Column(name = "relation_type",unique = true,nullable = false)
+  private String relationType;
+
+  /**
+   * 关系码值1(第一个表内字段)
+   */
+  @Column(name = "code_1",unique = true,nullable = false)
+  private String Code1;
+
+  /**
+   * 关系码值2(第二个表内字段)
+   */
+  @Column(name = "code_2",unique = true,nullable = false)
+  private String Code2;
 
   /**
    * 创建时间
@@ -47,6 +57,5 @@ public class Perm implements Serializable {
    */
   @Column(name = "modify_time",nullable = false,length = 30)
   private String modifyTime;
-
 
 }

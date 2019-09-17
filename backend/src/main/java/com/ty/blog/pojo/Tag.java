@@ -10,32 +10,32 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @ClassName: Comment
- * @Description: 评论表
+ * @ClassName: Tag
+ * @Description: 标签表
  * @author zhangtainyi
- * @date 2019/9/17 16:56
+ * @date 2019/9/17 10:24
  *
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = TableNameConsts.TY_COMMENT)
-@Table(name = TableNameConsts.TY_COMMENT)
-public class Comment implements Serializable {
+@Entity(name = TableNameConsts.TY_TAG)
+@Table(name = TableNameConsts.TY_TAG)
+public class Tag implements Serializable {
 
     /**
-     * 主键自增
+     * 主键
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 评论id
+     * 标签名
      */
-    @Column(name = "comment_id", unique = true, nullable = false)
-    private Long commentId;
+    @Column(name = "tag_name",unique = true,nullable = false)
+    private String tagName;
 
     /**
      * 创建时间

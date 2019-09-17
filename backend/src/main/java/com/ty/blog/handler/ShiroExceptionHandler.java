@@ -15,6 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @ClassName: ShiroExceptionHandler
+ * @Description: shiro异常全局处理
+ * @author zhangtainyi
+ * @date 2019/9/17 16:19
+ *
+ */
 @RestControllerAdvice
 public class ShiroExceptionHandler {
     private Logger log = LoggerFactory.getLogger(this.getClass());

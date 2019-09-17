@@ -23,15 +23,28 @@ import java.util.Set;
 @Component
 public class ShiroRedisCache<K,V> implements Cache<K,V> {
 
+
     @Resource
     private RedisUtil redisUtil;
 
+    /**
+     * jwt配置对象
+     */
     private final JwtConfig jwtConfig;
 
+    /**
+     * shiro缓存前缀
+     */
     private final String CACHE_PREFIX = SecurityConsts.PREFIX_SHIRO_CACHE;
     // 超时时间设置(分钟)
 //    public static final int DEFAULT_EXPIRE = 30;
+    /**
+     * 常量表示一分钟转成60秒
+     */
     public static final int SECOND = 60;
+    /**
+     * 过期时间，（分钟）
+     */
     private int expire;
 
     @Autowired

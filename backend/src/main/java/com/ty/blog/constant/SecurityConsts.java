@@ -1,22 +1,41 @@
 package com.ty.blog.constant;
 
+/**
+ * @ClassName: SecurityConsts
+ * @Description: 安全框架定义部分常量
+ * @author zhangtainyi
+ * @date 2019/9/17 15:08
+ *
+ */
 public class SecurityConsts {
 
-    //request请求头属性
+    /**
+     * request请求头属性
+     */
     public static final String REQUEST_AUTH_HEADER="Authorization";
 
-    //JWT-username
+    /**
+     * JWT-username
+     */
     public static final String USERNAME = "username";
 
-    //shiro_redis 前缀
+    /**
+     * shiro_redis 前缀
+     */
     public static final String PREFIX_SHIRO_CACHE = "shiro:redis_cache";
 
-    //refresh_token前缀
+    /**
+     * refresh_token前缀
+     */
     public final static String REFRESH_TOKEN = "refresh_token:";
 
-    //ip_token 记录token的ip
+    /**
+     * ip_token 记录token的ip
+     */
     public final static String IP_TOKEN = "ip_token:";
 
-    //JWT-currentTimeMillis
+    /**
+     * JWT-currentTimeMillis
+     */
     public final static String CURRENT_TIME_MILLIS = "currentTimeMillis";
 }

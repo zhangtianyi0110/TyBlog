@@ -3,8 +3,6 @@ package com.ty.blog.shiro;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.pojo.User;
-import com.ty.blog.service.UserPermService;
-import com.ty.blog.service.UserRoleService;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtToken;
@@ -41,10 +39,6 @@ public class ShiroRealm extends AuthorizingRealm {
     private JwtRedisCache jwtRedisCache;
     @Resource
     private UserService userService;
-    @Resource
-    private UserRoleService userRoleService;
-    @Resource
-    private UserPermService userPermService;
 
     /**
      * 大坑，需要重写这个方法
@@ -89,19 +83,26 @@ public class ShiroRealm extends AuthorizingRealm {
 
         throw new TokenExpiredException("Token expired or incorrect.");
     }
-    //获取权限
+
+    /**
+     * 获取权限
+     * @param principalCollection
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //1.从主体传过来的认证信息中，获取用户对象
         String token = (String)principalCollection.getPrimaryPrincipal();
         User user = userService.findByUsername(JwtUtil.getUsername(token));
         //通过用户名到数据库获取角色和权限
-        Set<String> roles = userRoleService.getRolesByUsername(user.getUsername());
-        Set<String> perms = userPermService.getPermByUsername(user.getUsername());
+        Set<String> roles = userService.getRolesByUsername(user.getUsername());
+        Set<String> perms = userService.getPermByUsername(user.getUsername());
         //构造对象返回加上角色权限
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.setRoles(roles);//角色
-        authorizationInfo.setStringPermissions(perms);//权限
+        //角色
+        authorizationInfo.setRoles(roles);
+        //权限
+        authorizationInfo.setStringPermissions(perms);
         return authorizationInfo;
 
     }
