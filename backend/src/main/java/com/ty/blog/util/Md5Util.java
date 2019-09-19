@@ -10,7 +10,7 @@ import org.apache.shiro.util.ByteSource;
  * @date 2019/9/17 16:44
  *
  */
-public class Md5Utils {
+public class Md5Util {
 
     /**
      * 算法
@@ -34,7 +34,7 @@ public class Md5Utils {
     }
     public static void main(String[] args) {
 
-        System.out.println(Md5Utils.encrypt("123456","admin"));
+        System.out.println(Md5Util.encrypt("123456","zzz"));
     }
 
 }
