@@ -31,9 +31,9 @@ public interface UserDao extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return
      */
-    @Query(value = "select code_2 from ty_relation where type = " + RelationTypeConsts.ROLE_PERM + " and code_1 " +
-            "in (select code_2 from ty_relation where type = " + RelationTypeConsts.USER_ROLE + " and code_1 = :username) " +
-            "UNION select code_2 from ty_relation where type= " + RelationTypeConsts.USER_PERM + " and username = :username"
+    @Query(value = "select code_2 from ty_relation where relation_type = '" + RelationTypeConsts.ROLE_PERM + "' and code_1 " +
+            "in (select code_2 from ty_relation where relation_type = '" + RelationTypeConsts.USER_ROLE + "' and code_1 = :username) " +
+            "UNION select code_2 from ty_relation where relation_type= '" + RelationTypeConsts.USER_PERM + "' and code_1 = :username"
             , nativeQuery = true)
     Set<String> findPermsByUsername(@Param("username") String username);
 
@@ -43,7 +43,7 @@ public interface UserDao extends JpaRepository<User, Long> {
      * @return
      */
     @Query(value = "select code_2 from ty_relation " +
-            "where type = " + RelationTypeConsts.USER_ROLE +
-            " and code_1 = :username", nativeQuery = true)
+            "where relation_type = '" + RelationTypeConsts.USER_ROLE +
+            "' and code_1 = :username", nativeQuery = true)
     Set<String> findRolesByUsername(@Param("username") String username);
 }

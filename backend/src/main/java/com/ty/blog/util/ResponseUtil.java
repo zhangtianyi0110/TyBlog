@@ -1,5 +1,6 @@
 package com.ty.blog.util;
 
+import com.ty.blog.constant.ResponseCodeConsts;
 import com.ty.blog.pojo.ResponseData;
 
 /**
@@ -18,7 +19,7 @@ public class ResponseUtil {
      */
     public static ResponseData success(){
 
-        return new ResponseData(200,"响应成功",null);
+        return new ResponseData(ResponseCodeConsts.SUCCESS,"响应成功",null);
     }
 
     /**
@@ -27,7 +28,7 @@ public class ResponseUtil {
      * @return
      */
     public static ResponseData success(String msg){
-        return new ResponseData(200,msg,null);
+        return new ResponseData(ResponseCodeConsts.SUCCESS,msg,null);
     }
 
     /**
@@ -36,7 +37,7 @@ public class ResponseUtil {
      * @return
      */
     public static ResponseData success(Object data){
-        return new ResponseData(200,"响应成功",data);
+        return new ResponseData(ResponseCodeConsts.SUCCESS,"响应成功",data);
     }
 
     /**
@@ -46,7 +47,7 @@ public class ResponseUtil {
      * @return
      */
     public static ResponseData success(String msg, Object data){
-        return new ResponseData(200,msg,data);
+        return new ResponseData(ResponseCodeConsts.SUCCESS,msg,data);
     }
 
     /**

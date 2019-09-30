@@ -1,9 +1,13 @@
 package com.ty.blog.service;
 
+import com.google.gson.Gson;
 import com.ty.blog.base.BaseService;
 import com.ty.blog.pojo.User;
+import com.ty.blog.shiro.jwt.JwtUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -42,9 +46,27 @@ public class UserService extends BaseService {
      */
     public Set<String> getPermByUsername(String username){
 
-//        String relationType1 =
-
         return userDao.findPermsByUsername(username);
     }
+
+    /**
+     * 获取用户的信息包括权限角色和基本信息
+     * @param token 用户token
+     * @return
+     */
+    public Map<String, Object> getInfo(String token){
+
+        String username = JwtUtil.getUsername(token);
+        Map<String, Object> info = new HashMap<>();
+        User user = findByUsername(username);
+        Set<String> roles = getRolesByUsername(username);
+        Set<String> perms = getPermByUsername(username);
+        info.put("user", user);
+        info.put("roles", roles);
+        info.put("perms", roles);
+        log.info("用户信息:" + new Gson().toJson(info));
+        return info;
+    }
+
 
 }

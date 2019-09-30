@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @ClassName: LoginController
@@ -29,6 +30,8 @@ import javax.annotation.Resource;
  *
  */
 @RestController
+@RequestMapping("user")
+//@CrossOrigin(maxAge = 3600)
 public class LoginController extends BaseController {
 
 
@@ -48,9 +51,15 @@ public class LoginController extends BaseController {
 //        return "login";
 //    }
 
+    /**
+     * 登录
+     * @param user 获取用户的用户名和密码
+     * @return token
+     * @throws Exception
+     */
     @PostMapping("/login")
     @ResponseBody
-    public ResponseData login(User user) throws Exception{
+    public ResponseData login(@RequestBody User user) throws Exception{
         log.info("开始认证...");
         String username = user.getUsername();
         String password = Md5Util.encrypt(user.getPassword(),username);
@@ -61,19 +70,46 @@ public class LoginController extends BaseController {
             throw new IncorrectCredentialsException();
         }
         String currentTimeMillis = String.valueOf(System.currentTimeMillis());
-        String jwt = JwtUtil.sign(user.getUsername(), currentTimeMillis);//生成签名
-        jwtRedisCache.put(SecurityConsts.REFRESH_TOKEN + username, currentTimeMillis, jwtConfig.getRefreshTokenExpireTime());//将时间戳存入缓存
-        jwtRedisCache.put(SecurityConsts.IP_TOKEN + username, JwtUtil.getIpAddress(request), jwtConfig.getRefreshTokenExpireTime());//将ip存入，防止其他用户使用token侵入
+        //生成签名
+        String jwt = JwtUtil.sign(user.getUsername(), currentTimeMillis);
+        //将时间戳存入缓存
+        jwtRedisCache.put(SecurityConsts.REFRESH_TOKEN + username, currentTimeMillis, jwtConfig.getRefreshTokenExpireTime());
+        //将ip存入，防止其他用户使用token侵入
+        jwtRedisCache.put(SecurityConsts.IP_TOKEN + username, JwtUtil.getIpAddress(request), jwtConfig.getRefreshTokenExpireTime());
         log.info("当前用户登录ip为:"+JwtUtil.getIpAddress(request));
         log.info("结束认证...");
         return ResponseUtil.success("登录成功", jwt);
     }
 
-    @RequestMapping("/logout")
+    /**
+     * 获取用户信息
+     * @param token 用户token
+     * @return
+     */
+    @GetMapping("/info")
+    @RequiresAuthentication
+    public ResponseData info(String token){
+        Map<String, Object> info = userService.getInfo(token);
+        return ResponseUtil.success(info);
+    }
+
+    /**
+     * 登出
+     * @return
+     */
+    @PostMapping("/logout")
     public ResponseData logout(){
+        Subject subject = SecurityUtils.getSubject();
+        String token = (String) subject.getPrincipal();
+        String username = JwtUtil.getUsername(token);
+        //清除redis缓存
+        jwtRedisCache.put(SecurityConsts.REFRESH_TOKEN + username, null, 0);
+        jwtRedisCache.put(SecurityConsts.IP_TOKEN + username, null, 0);
+        //登出
         SecurityUtils.getSubject().logout();
         return ResponseUtil.success("注销成功");
     }
+
 
     @GetMapping("/article")
     @RequiresAuthentication
@@ -86,10 +122,6 @@ public class LoginController extends BaseController {
         }
     }
 
-//    @RequestMapping("/")
-//    public String redirectIndex(){
-//        return "redirect:/index";
-//    }
 
     @RequestMapping("/index")
     @RequiresPermissions("user:get")
