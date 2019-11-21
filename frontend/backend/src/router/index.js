@@ -47,12 +47,53 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: 'Dashboard', icon: 'dashboard' }
+      }
+    ]
+  },
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/profile',
+    name: 'User',
+    meta: { title: '用户管理', icon: 'user' },
+    children: [
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/user/profile'),
+        meta: { title: '关于我', icon: 'user' }
+      }
+    ]
+  },
+
+  {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/list',
+    name: 'Article',
+    meta: { title: '文章管理', icon: 'edit' },
+    children: [
+      {
+        path: 'list',
+        name: 'list',
+        component: () => import('@/views/article/list'),
+        meta: { title: '文章列表', icon: 'list' }
+      },
+      {
+        path: 'edit',
+        name: 'edit',
+        component: () => import('@/views/article/edit'),
+        meta: { title: '文章编辑', icon: 'edit' }
+      }
+    ]
+
   },
 
   {

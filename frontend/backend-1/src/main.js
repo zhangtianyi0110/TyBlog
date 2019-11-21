@@ -4,6 +4,12 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import '@/styles/index.css'
+import './premission.js'
+
+// import {mock} from '../mock/index.js'
+// if(process.env.NODE_ENV === 'development'){
+//   mock()
+// }
 
 Vue.config.productionTip = false
 

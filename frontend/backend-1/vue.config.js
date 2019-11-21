@@ -11,7 +11,7 @@ function resolve(dir) {
 
 const name = 'Ty Blog'
 //根据环境判断端口号
-const port = process.env.port || process.env.npm_config_port || 8888 // dev port
+const port = process.env.port || 4000 // dev port
 
 module.exports = {
   publicPath: '/',
@@ -19,21 +19,20 @@ module.exports = {
   assetsDir: 'public',
   lintOnSave: process.env.NODE_ENV === 'development',//为true时候lint错误会输出编译警告，为false会直接编译失败，生产环境必须为false
   productionSourceMap: false,//如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建
-  // devServer: {
-  //   host: '0.0.0.0',
-  //   port: 8081,
-  //   https: false,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://baidu.com',
-    //     changeOrigin: true,
-    //     secure: false,
-    //     pathRewrite: {
-    //       '^/api': ''
-    //     }
-    //   }
-    // }
-  // },
+  devServer: {
+    port: port,
+    https: false,
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {
+        target: `http://127.0.0.1:8080`,
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/dev-api': '/api'
+        }
+      }
+    }
+  },
   configureWebpack: {//webpack配置
     name: name,
     resolve: {

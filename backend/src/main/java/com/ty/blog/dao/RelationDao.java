@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface RelationDao extends JpaRepository<Relation, Long> {
+public interface RelationDao extends JpaRepository<Relation, Integer> {
 
 //    /**
 //     * 通过关系类型type和关系码值1查询结果集

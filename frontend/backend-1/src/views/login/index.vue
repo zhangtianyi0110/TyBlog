@@ -44,6 +44,7 @@
             this.$store.dispatch('user/login', this.loginForm).then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
+              alert('登录成功')
             }).catch(() => {
               this.loading = false
             })

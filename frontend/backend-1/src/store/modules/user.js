@@ -3,7 +3,7 @@
  */
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-// import { resetRouter } from '@/router'
+import { resetRouter } from '@/router'
 
 
 const state = {
@@ -54,6 +54,55 @@ const actions = {
       })
     })
   },
+  //获取用户信息
+  getInfo({ commit, state }){
+    return new Promise((resolve, reject) => {
+      getInfo(state.token).then(response => {
+        const { data } = response
+
+        if (!data) {
+          reject('验证失败, 请重新登陆.')
+        }
+
+        const { roles, perms, user } = data
+        // 必须要一个角色
+        if (!roles || roles.length <= 0) {
+          reject('getInfo: roles must be a non-null array!')
+        }
+
+        commit('SET_NAME', user.nickName)
+        commit('SET_AVATAR', user.avatarUrl)
+        commit('SET_ROLES', roles)
+        commit('SET_PERMS', perms)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  //退出登录
+  logout({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      logout(state.token).then(() => {
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
+        resetRouter()
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // remove token
+  resetToken({ commit }) {
+    return new Promise(resolve => {
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      removeToken()
+      resolve()
+    })
+  }
 
 }
 

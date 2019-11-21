@@ -22,4 +22,6 @@ public class BaseService {
     protected UserDao userDao;
     @Resource
     protected RelationDao relationDao;
+    @Resource
+    protected ArticleDao articleDao;
 }

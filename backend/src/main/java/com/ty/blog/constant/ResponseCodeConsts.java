@@ -8,19 +8,19 @@ package com.ty.blog.constant;
  */
 public class ResponseCodeConsts {
     /**
-     * 成功返回20000
+     * 成功返回200
      */
     public static final int SUCCESS = 20000;
     /**
-     * 非法token返回50008
+     * 非法token返回401
      */
     public static final int ILLEGAL_TOKEN = 50008;
     /**
-     * 非常用设备返回50012
+     * 非常用设备返回402
      */
     public static final int ILLEGAL_CLIENT = 50012;
     /**
-     * token过期返回50014
+     * token过期返回403
      */
     public static final int EXPIRED_TOKEN = 50014;
 }

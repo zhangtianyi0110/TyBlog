@@ -6,7 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,7 +38,7 @@ public class Category implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     /**
      * 分类名
@@ -41,7 +49,8 @@ public class Category implements Serializable {
     /**
      * 分类描述
      */
-    @Column(name = "category_desc",nullable = false)
+    @Lob
+    @Column(name = "category_desc", columnDefinition = "TEXT")
     private String categoryDesc;
 
     /**

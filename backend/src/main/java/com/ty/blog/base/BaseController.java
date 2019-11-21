@@ -30,6 +30,8 @@ public class BaseController {
 
     @Resource
     protected UserService userService;
+    @Resource
+    protected ArticleService articleService;
 
 
 }

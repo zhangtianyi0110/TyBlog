@@ -2,7 +2,10 @@
  <div class="layout-home">
    <el-container>
     <el-header>
-      <Navbar/>
+      <Navbar>
+        <template #left>TyBlog</template>
+        <template #right>这是右边具名插槽</template>
+      </Navbar>
     </el-header>
     <el-container>
       <el-aside>
@@ -76,6 +79,10 @@ export default {
 
   .el-container:nth-child(7) .el-aside {
     line-height: 320px;
+  }
+
+  Navbar {
+    color: red;
   }
 
 </style>

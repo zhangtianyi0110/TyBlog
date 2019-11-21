@@ -26,17 +26,12 @@ import java.util.Date;
 public class Article implements Serializable {
 
     /**
-     * 主键自增
+     * 主键自增,文章id
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    /**
-     * 文章id
-     */
-    @Column(name = "article_id", unique = true, nullable = false)
-    private Long articleId;
 
     /**
      * 作者
@@ -91,14 +86,16 @@ public class Article implements Serializable {
     /**
      * 发布日期
      */
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "publish_date", nullable = false)
-    private String publishDate;
+    private Date publishDate;
 
     /**
      * 更新文章日期
      */
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date", nullable = false)
-    private String updateDate;
+    private Date updateDate;
 
     /**
      * 文章url
@@ -110,13 +107,13 @@ public class Article implements Serializable {
      * 文章点赞数
      */
     @Column(name = "likes", nullable = false)
-    private Long likes;
+    private Integer likes;
 
     /**
      * 文章被点击次数
      */
     @Column(name = "read_count", nullable = false)
-    private Long readCount;
+    private Integer readCount;
 
     /**
      * 文章首图URL

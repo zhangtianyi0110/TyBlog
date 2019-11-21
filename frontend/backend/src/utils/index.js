@@ -108,3 +108,30 @@ export function param2Obj(url) {
       '"}'
   )
 }
+
+/**
+ * @export
+ * @param {用户名字} nickname
+ * @returns
+ */
+export function getTimeInfo(nickname) {
+  const now = new Date()
+  const hour = now.getHours()
+  let msg = ''
+  if (hour < 6) {
+    msg = '凌晨了，' + nickname + '，继续睡觉吧，有什么事情白天再努力吧。'
+  } else if (hour < 9) {
+    msg = '早上好，' + nickname + '，开始工作吧，每一天都要信心满满。'
+  } else if (hour < 12) {
+    msg = '上午好，' + nickname + '，今天有什么想法，写下来吧。'
+  } else if (hour < 14) {
+    msg = '中午了，' + nickname + '，吃完饭睡一觉吧。'
+  } else if (hour < 18) {
+    msg = '下午好，' + nickname + '，休息好了，就继续码字吧。'
+  } else if (hour < 22) {
+    msg = '晚上好，' + nickname + '，要不要看部电影休息一下。'
+  } else {
+    msg = '夜深了' + nickname + '，忙了一天美美睡一觉吧。'
+  }
+  return msg
+}

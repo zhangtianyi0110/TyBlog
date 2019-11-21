@@ -1,9 +1,20 @@
 package com.ty.blog.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ty.blog.constant.TableNameConsts;
-import lombok.*;
-import javax.persistence.*;
-import javax.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,7 +38,7 @@ public class User implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     /**
      * 用户名
@@ -75,13 +86,13 @@ public class User implements Serializable {
     /**
      * 个人简介
      */
-    @Column(name = "personal_profile")
-    private String personalProfile;
+    @Column(name = "profile", length = 1000)
+    private String profile;
 
     /**
      * 头像url地址
      */
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", length = 10000)
     private String avatarUrl;
 
     /**
@@ -99,6 +110,7 @@ public class User implements Serializable {
     /**
      * 最后一次登录时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_time")
     private Date lastLoginTime;

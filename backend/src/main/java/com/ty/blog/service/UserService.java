@@ -1,9 +1,9 @@
 package com.ty.blog.service;
 
-import com.google.gson.Gson;
 import com.ty.blog.base.BaseService;
 import com.ty.blog.pojo.User;
 import com.ty.blog.shiro.jwt.JwtUtil;
+import com.ty.blog.util.GsonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -63,10 +63,9 @@ public class UserService extends BaseService {
         Set<String> perms = getPermByUsername(username);
         info.put("user", user);
         info.put("roles", roles);
-        info.put("perms", roles);
-        log.info("用户信息:" + new Gson().toJson(info));
+        info.put("perms", perms);
+        log.info("用户信息:" + GsonUtil.formatDate("yyyy年MM月dd日 HH:mm:ss").toJson(info));
         return info;
     }
-
 
 }

@@ -30,7 +30,7 @@ public class Link implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     /**
      * 链接标题
@@ -47,19 +47,21 @@ public class Link implements Serializable {
     /**
      * 链接描述
      */
-    @Column(name = "link_desc",unique = true,nullable = false)
+    @Lob
+    @Column(name = "link_desc", columnDefinition = "TEXT")
     private String linkDesc;
 
     /**
-     * 链接序号，大的排前面
+     * 链接序号，大的排前面，默认5
      */
-    @Column(name = "link_order",unique = true,nullable = false)
-    private String linkOrder;
+    @Column(name = "link_order", nullable = false)
+    private Integer linkOrder = 5;
 
     /**
      * 是否置顶，多个置顶取链接序号大的
+     * 0否1是
      */
-    @Column(name = "is_top",unique = true,nullable = false)
+    @Column(name = "is_top", nullable = false)
     private String isTop;
 
     /**

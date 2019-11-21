@@ -19,13 +19,14 @@ export function login(data) {
 export function logout() {
   return request({
     url: 'user/logout',
-    method: 'get'
+    method: 'post'
   })
 }
 
-export function getInfo() {
+export function getInfo(token) {
   return request({
     url: 'user/info',
-    method: 'get'
+    method: 'get',
+    params: {token}
   })
 }

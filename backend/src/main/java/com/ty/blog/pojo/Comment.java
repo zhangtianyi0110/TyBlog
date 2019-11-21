@@ -30,31 +30,25 @@ public class Comment implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     /**
-     * 评论人用户名
+     * 评论人昵称
      */
-    @Column(name = "comment_username", nullable = false)
-    private Long commentUsername;
+    @Column(name = "comment_nickname", nullable = false)
+    private String commentNickname;
 
     /**
      * 评论人链接
      */
-    @Column(name = "comment_username_url", nullable = false)
-    private Long commentUsernameUrl;
+    @Column(name = "comment_nickname_url", nullable = false)
+    private String commentNicknameUrl;
 
     /**
      * 父评论id
      */
-    @Column(name = "comment_parent_id", nullable = false)
-    private Long commentParentId;
-
-    /**
-     * 父评论人链接
-     */
-    @Column(name = "comment_parent_username", nullable = false)
-    private Long commentParentUsername;
+    @Column(name = "comment_parent_id")
+    private Integer commentParentId;
 
 
     /**

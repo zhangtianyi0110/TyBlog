@@ -6,18 +6,18 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: []
+  roles: [],
+  perms: [],
+  lastLoginTime: '',
+  githubUrl: ''
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_USER: (state, user) => {
+    state.user = user
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -48,21 +48,19 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('验证失败，请重新登录！')
         }
 
         const { roles, perms, user } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+          reject('getInfo: 用户角色信息为空')
         }
         commit('SET_ROLES', roles)
         commit('SET_PERMS', perms)
-        commit('SET_NAME', user.nickname)
-        commit('SET_AVATAR', user.avatarUrl)
+        commit('SET_USER', user)
         resolve(data)
       }).catch(error => {
         reject(error)

@@ -17,7 +17,13 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -63,11 +69,15 @@ public class LoginController extends BaseController {
         log.info("开始认证...");
         String username = user.getUsername();
         String password = Md5Util.encrypt(user.getPassword(),username);
-        String realPassword = userService.findByUsername(username).getPassword();
-        if (realPassword == null) {
+        User realUser = userService.findByUsername(username);
+
+        if (realUser == null) {
             throw new UnknownAccountException();
-        } else if (!realPassword.equals(password)) {
-            throw new IncorrectCredentialsException();
+        } else {
+            String realPassword = userService.findByUsername(username).getPassword();
+            if (realPassword==null && !realPassword.equals(password)) {
+                throw new IncorrectCredentialsException();
+            }
         }
         String currentTimeMillis = String.valueOf(System.currentTimeMillis());
         //生成签名

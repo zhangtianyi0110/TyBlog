@@ -17,7 +17,7 @@ import java.util.Set;
  *
  */
 @Repository
-public interface UserDao extends JpaRepository<User, Long> {
+public interface UserDao extends JpaRepository<User, Integer> {
 
     /**
      * 通过用户名查询用户对象
