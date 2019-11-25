@@ -1,7 +1,7 @@
 package com.ty.blog;
 
-import com.google.gson.Gson;
 import com.ty.blog.constant.RelationTypeConsts;
+import com.ty.blog.constant.TableNameConsts;
 import com.ty.blog.dao.ArticleDao;
 import com.ty.blog.dao.CategoryDao;
 import com.ty.blog.dao.CommentDao;
@@ -22,6 +22,7 @@ import com.ty.blog.pojo.Tag;
 import com.ty.blog.pojo.User;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
+import com.ty.blog.util.MaxIdUtil;
 import com.ty.blog.util.Md5Util;
 import com.ty.blog.util.RedisUtil;
 import org.junit.Test;
@@ -34,7 +35,9 @@ import javax.annotation.Resource;
 import javax.persistence.Entity;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -65,7 +68,8 @@ public class BlogApplicationTests {
     JwtRedisCache jwtRedisCache;
     @Autowired
     RedisUtil redisUtil;
-
+    @Autowired
+    MaxIdUtil maxIdUtil;
 
     @Test
     public void contextLoads() {
@@ -121,7 +125,8 @@ public class BlogApplicationTests {
         permDao.saveAndFlush(perm);
         //文章
         Article article = Article.builder()
-                .author(user.getNickname())
+                .id(maxIdUtil.getMaxId(TableNameConsts.TY_ARTICLE))
+                .author(user.getUsername())
                 .originalAuthor("")
                 .articleTitle("Hello World")
                 .articleSummary("Hello World")
@@ -143,18 +148,34 @@ public class BlogApplicationTests {
                 .modifyTime(new Date()).build();
         articleDao.saveAndFlush(article);
         //分类
-        Category category = Category.builder()
-                .categoryName("java")
-                .categoryDesc("编程")
-                .createTime(new Date())
-                .modifyTime(new Date()).build();
-        categoryDao.saveAndFlush(category);
+        List<String> categoryNames = Arrays.asList(new String[]{"category1", "category2", "category3"});
+        categoryNames.forEach(categoryName -> {
+            Category category = Category.builder()
+                    .categoryName(categoryName)
+                    .categoryDesc("编程")
+                    .createTime(new Date())
+                    .modifyTime(new Date()).build();
+            categoryDao.saveAndFlush(category);
+            Relation relation = Relation.builder().createTime(new Date()).modifyTime(new Date())
+                    .relationType(RelationTypeConsts.ARTICLE_CATEGORY)
+                    .code1(categoryName).code2(article.getId() + "").build();
+            relationDao.saveAndFlush(relation);
+        });
+
         //标签
-        Tag tag = Tag.builder()
-                .tagName("spring")
-                .createTime(new Date())
-                .modifyTime(new Date()).build();
-        tagDao.saveAndFlush(tag);
+        List<String> tagNames = Arrays.asList(new String[]{"tag1", "tag2", "tag2"});
+        tagNames.forEach(tagName -> {
+            Tag tag = Tag.builder()
+                    .tagName(tagName)
+                    .createTime(new Date())
+                    .modifyTime(new Date()).build();
+            tagDao.saveAndFlush(tag);
+            Relation relation = Relation.builder().createTime(new Date()).modifyTime(new Date())
+                    .relationType(RelationTypeConsts.ARTICLE_CATEGORY)
+                    .code1(tagName).code2(article.getId() + "").build();
+            relationDao.saveAndFlush(relation);
+        });
+
         //评论
         Comment comment = Comment.builder()
                 .commentNickname("tyblog")
@@ -177,9 +198,9 @@ public class BlogApplicationTests {
 
 
         relationDao.saveAndFlush(Relation.builder().createTime(new Date()).modifyTime(new Date())
-                .relationType(RelationTypeConsts.USER_ROLE).Code1("tyblog").Code2("blogger").build());
+                .relationType(RelationTypeConsts.USER_ROLE).code1("tyblog").code2("blogger").build());
         relationDao.saveAndFlush(Relation.builder().createTime(new Date()).modifyTime(new Date())
-                .relationType(RelationTypeConsts.ROLE_PERM).Code1("blogger").Code2("article:*").build());
+                .relationType(RelationTypeConsts.ROLE_PERM).code1("blogger").code2("article:*").build());
 
 
     }
@@ -187,7 +208,7 @@ public class BlogApplicationTests {
 
     @Test
     public void getPermByUsername(){
-        System.out.println(new Gson().toJson(userService.findByUsername("tyblog")));
+        System.out.println(maxIdUtil.getMaxId(TableNameConsts.TY_RELATION));
     }
 
 }

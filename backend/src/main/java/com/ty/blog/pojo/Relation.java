@@ -32,20 +32,32 @@ public class Relation implements Serializable {
   /**
    * 关系类型，格式：（表名_表名）
    */
-  @Column(name = "relation_type",unique = true,nullable = false)
+  @Column(name = "relation_type", nullable = false)
   private String relationType;
 
   /**
    * 关系码值1(第一个表内字段)
    */
-  @Column(name = "code_1",unique = true,nullable = false)
-  private String Code1;
+  @Column(name = "code_1", nullable = false)
+  private String code1;
+
+  /**
+   * 关系码值1描述(第一个表内字段)
+   */
+  @Column(name = "code_1_desc")
+  private String code1Desc;
 
   /**
    * 关系码值2(第二个表内字段)
    */
-  @Column(name = "code_2",unique = true,nullable = false)
-  private String Code2;
+  @Column(name = "code_2", nullable = false)
+  private String code2;
+
+  /**
+   * 关系码值2描述(第二个表内字段)
+   */
+  @Column(name = "code_2_desc")
+  private String code2Desc;
 
   /**
    * 创建时间

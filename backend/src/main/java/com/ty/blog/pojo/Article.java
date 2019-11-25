@@ -29,9 +29,7 @@ public class Article implements Serializable {
      * 主键自增,文章id
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-
 
     /**
      * 作者

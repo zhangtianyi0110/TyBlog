@@ -35,13 +35,13 @@ public class Link implements Serializable {
     /**
      * 链接标题
      */
-    @Column(name = "link_title",unique = true,nullable = false)
+    @Column(name = "link_title", unique = true, nullable = false)
     private String linkTitle;
 
     /**
      * 链接地址
      */
-    @Column(name = "link_address",unique = true,nullable = false)
+    @Column(name = "link_address", unique = true, nullable = false)
     private String linkAddress;
 
     /**
@@ -68,14 +68,14 @@ public class Link implements Serializable {
      * 创建时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time",nullable = false,length = 30)
+    @Column(name = "create_time", nullable = false, length = 30)
     private Date createTime;
 
     /**
      * 最后修改时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_time",nullable = false)
+    @Column(name = "modify_time", nullable = false)
     private Date modifyTime;
 
 }

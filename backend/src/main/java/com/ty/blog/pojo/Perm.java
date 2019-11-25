@@ -35,21 +35,21 @@ public class Perm implements Serializable {
   /**
    * 权限名
    */
-  @Column(name = "perm",unique = true,nullable = false)
+  @Column(name = "perm", unique = true, nullable = false)
   private String perm;
 
   /**
    * 创建时间
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "create_time",nullable = false,length = 30)
+  @Column(name = "create_time", nullable = false, length = 30)
   private Date createTime;
 
   /**
    * 最后修改时间
    */
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "modify_time",nullable = false)
+  @Column(name = "modify_time", nullable = false)
   private Date modifyTime;
 
 

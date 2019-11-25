@@ -1,6 +1,9 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
+import com.ty.blog.pojo.Article;
+import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +28,17 @@ public class ArticleController extends BaseController {
      */
     @GetMapping("count/{name}")
     @RequiresAuthentication
-    public Integer getCount(@PathVariable("name") String author){
-        return articleService.getArticlesByAuthor(author).size();
+    public ResponseData getCount(@PathVariable("name") String author){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(author).size());
     }
+
+    /**
+     * 保存文章
+     * @param article
+     * @return
+     */
+    public ResponseData saveArticle(Article article){
+        return null;
+    }
+
 }

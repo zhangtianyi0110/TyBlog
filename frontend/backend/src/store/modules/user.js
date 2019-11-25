@@ -24,6 +24,9 @@ const mutations = {
   },
   SET_PERMS: (state, perms) => {
     state.perms = perms
+  },
+  SET_CATEGORIES: (state, categories) => {
+    state.categories = categories
   }
 }
 
@@ -61,6 +64,7 @@ const actions = {
         commit('SET_ROLES', roles)
         commit('SET_PERMS', perms)
         commit('SET_USER', user)
+        // commit('SET_CATEGORIES', categories)
         resolve(data)
       }).catch(error => {
         reject(error)

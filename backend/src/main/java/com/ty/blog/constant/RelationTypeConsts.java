@@ -30,14 +30,14 @@ public class RelationTypeConsts {
     public static final String USER_PERM = TableNameConsts.TY_USER + UNDER_LINE + TableNameConsts.TY_PERM;
 
     /**
-     * 标签文章关系
+     * 文章标签关系
      */
-    public static final String TAG_ARTICLE = TableNameConsts.TY_TAG + UNDER_LINE + TableNameConsts.TY_ARTICLE;
+    public static final String ARTICLE_TAG = TableNameConsts.TY_ARTICLE + UNDER_LINE + TableNameConsts.TY_TAG;
 
     /**
-     * 分类文章关系
+     * 文章分类关系
      */
-    public static final String CATEGORY_ARTICLE = TableNameConsts.TY_CATEGORY + UNDER_LINE + TableNameConsts.TY_ARTICLE;
+    public static final String ARTICLE_CATEGORY = TableNameConsts.TY_ARTICLE + UNDER_LINE + TableNameConsts.TY_CATEGORY;
 
     /**
      * 文章评论关系

@@ -14,6 +14,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryDao extends JpaRepository<Category, Integer> {
 
-
+    /**
+     * 根据分类名字获取分类对象
+     * @param categoryName 分类名字
+     * @return
+     */
+    Category findByCategoryName(String categoryName);
 
 }

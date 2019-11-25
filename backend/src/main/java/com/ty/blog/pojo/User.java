@@ -43,19 +43,19 @@ public class User implements Serializable {
     /**
      * 用户名
      */
-    @Column(name = "username",unique = true,nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     /**
      * 密码
      */
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     /**
      * 性别
      */
-    @Column(name = "gender",nullable = false,length = 10)
+    @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 
     /**
@@ -67,7 +67,7 @@ public class User implements Serializable {
     /**
      * 昵称
      */
-    @Column(name = "nickname",nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     /**
@@ -119,14 +119,14 @@ public class User implements Serializable {
      * 创建时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time",nullable = false,length = 30)
+    @Column(name = "create_time", nullable = false, length = 30)
     private Date createTime;
 
     /**
      * 最后修改时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_time",nullable = false)
+    @Column(name = "modify_time", nullable = false)
     private Date modifyTime;
 
 

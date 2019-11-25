@@ -4,6 +4,8 @@ import com.ty.blog.pojo.Relation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @ClassName: RelationDao
  * @Description: 关系实体持久层
@@ -14,12 +16,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RelationDao extends JpaRepository<Relation, Integer> {
 
-//    /**
-//     * 通过关系类型type和关系码值1查询结果集
-//     * @param type 关系类型
-//     * @param code1 关系码值1
-//     * @return
-//     */
-//    List<Relation>  findRelationsByRelationTypeAndAndCode1(String type, String code1);
+    /**
+     * 通过关系类型type和关系码值1查询结果集
+     * @param type 关系类型
+     * @param code2 关系码值2
+     * @return
+     */
+    List<Relation> findAllByRelationTypeAndCode1In(String type, List<String> code2);
 
 }
