@@ -5,6 +5,7 @@ import com.ty.blog.pojo.Article;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: UserService
@@ -24,5 +25,9 @@ public class ArticleService extends BaseService {
     public List<Article> getArticlesByAuthor(String author) {
         List<Article> articles = articleDao.findAllByAuthor(author);
         return articles;
+    }
+
+    public boolean saveArticle(Map<String, Object> map){
+        return true;
     }
 }

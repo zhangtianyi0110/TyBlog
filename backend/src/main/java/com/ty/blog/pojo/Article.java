@@ -40,7 +40,7 @@ public class Article implements Serializable {
     /**
      * 原作者
      */
-    @Column(name = "original_author", nullable = false)
+    @Column(name = "original_author")
     private String originalAuthor;
 
     /**

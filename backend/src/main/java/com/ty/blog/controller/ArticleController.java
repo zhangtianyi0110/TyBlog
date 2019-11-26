@@ -1,7 +1,6 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
-import com.ty.blog.pojo.Article;
 import com.ty.blog.pojo.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * @ClassName: ArticleController
@@ -34,11 +35,19 @@ public class ArticleController extends BaseController {
 
     /**
      * 保存文章
-     * @param article
+     * @param map
      * @return
      */
-    public ResponseData saveArticle(Article article){
-        return null;
+    public ResponseData saveArticle(Map<String, Object> map){
+
+        boolean flag = articleService.saveArticle(map);
+        if(flag){
+            if("1".equals(map.get("articleState"))){
+                return ResponseUtil.success("文章发布成功");
+            }
+            return ResponseUtil.success("草稿保存成功");
+        }
+        return ResponseUtil.failure(500, "发布失败");
     }
 
 }
