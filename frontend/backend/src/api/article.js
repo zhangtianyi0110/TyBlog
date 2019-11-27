@@ -6,3 +6,20 @@ export function getCategories(username) {
     method: 'get'
   })
 }
+
+export function saveArticle(params) {
+  return request({
+    url: '/articles',
+    method: 'post',
+    data
+  })
+}
+
+export function uploadArticleImg(data) {
+  return request({
+    url: '/articles/articleImg',
+    method: 'post',
+    data,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}

@@ -57,11 +57,18 @@ public class Article implements Serializable {
     private String articleSummary;
 
     /**
-     * 文章内容(TEXT类型)
+     * 文章内容md格式(TEXT类型)
      */
     @Lob
-    @Column(name = "article_content", nullable = false, columnDefinition = "TEXT")
-    private String articleContent;
+    @Column(name = "md_content", nullable = false, columnDefinition = "TEXT")
+    private String mdContent;
+
+    /**
+     * 文章内容html格式(TEXT类型)
+     */
+    @Lob
+    @Column(name = "html_content", nullable = false, columnDefinition = "TEXT")
+    private String htmlContent;
 
     /**
      * 文章标签

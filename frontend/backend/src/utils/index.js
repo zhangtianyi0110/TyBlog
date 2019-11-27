@@ -135,3 +135,18 @@ export function getTimeInfo(nickname) {
   }
   return msg
 }
+
+/**
+ * 判断是否为空
+ * @param  {...any} args
+ */
+export function isEmpty(...args) {
+  for (var i = 0; i < args.length; i++) {
+    var argument = args[i]
+    if (argument === null || argument === '' || argument === undefined) {
+      return false
+    }
+  }
+  return true
+}
+
