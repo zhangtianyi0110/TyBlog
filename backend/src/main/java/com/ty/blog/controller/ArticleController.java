@@ -3,6 +3,8 @@ package com.ty.blog.controller;
 import com.ty.blog.base.BaseController;
 import com.ty.blog.pojo.ResponseData;
 import com.ty.blog.util.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import java.util.Map;
  * @date 2019/11/20 16:22
  *
  */
+@Api(tags = "文章处理相关接口", description = "提供文章相关的 Rest API")
 @RestController
 @RequestMapping("articles")
 public class ArticleController extends BaseController {
@@ -32,6 +35,7 @@ public class ArticleController extends BaseController {
      * @param author
      * @return
      */
+    @ApiOperation("获取指定作者的文章总数量")
     @GetMapping("count/{name}")
     @RequiresAuthentication
     public ResponseData getCount(@PathVariable("name") String author){
@@ -43,6 +47,7 @@ public class ArticleController extends BaseController {
      * @param map
      * @return
      */
+    @ApiOperation("发布文章/草稿")
     @PostMapping
     public ResponseData saveArticle(@RequestBody Map<String, String> mmp){
 

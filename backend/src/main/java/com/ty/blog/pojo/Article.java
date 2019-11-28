@@ -1,6 +1,8 @@
 package com.ty.blog.pojo;
 
 import com.ty.blog.constant.TableNameConsts;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +19,7 @@ import java.util.Date;
  * @date 2019/9/11 14:53
  *
  */
+@ApiModel("文章实体对象")
 @Data
 @Builder
 @AllArgsConstructor
@@ -28,6 +31,7 @@ public class Article implements Serializable {
     /**
      * 主键自增,文章id
      */
+    @ApiModelProperty()
     @Id
     private Integer id;
 
@@ -46,15 +50,15 @@ public class Article implements Serializable {
     /**
      * 文章标题
      */
-    @Column(name = "article_title", nullable = false)
-    private String articleTitle;
+    @Column(name = "title", nullable = false)
+    private String title;
 
     /**
      * 文章摘要
      */
     @Lob
-    @Column(name = "article_summary", nullable = false, columnDefinition = "TEXT")
-    private String articleSummary;
+    @Column(name = "summary", nullable = false, columnDefinition = "TEXT")
+    private String summary;
 
     /**
      * 文章内容md格式(TEXT类型)
@@ -73,8 +77,8 @@ public class Article implements Serializable {
     /**
      * 文章标签
      */
-    @Column(name = "article_tags", nullable = false)
-    private String articleTags;
+    @Column(name = "tags", nullable = false)
+    private String tags;
 
     /**
      * 文章类型
