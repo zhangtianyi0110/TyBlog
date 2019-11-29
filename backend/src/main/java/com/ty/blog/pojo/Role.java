@@ -6,9 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: Role
@@ -37,6 +49,17 @@ public class Role implements Serializable {
    */
   @Column(name = "role_name", unique = true, nullable = false)
   private String roleName;
+
+  /**
+   * 角色描述
+   */
+  @Column(name = "role_desc")
+  private String roleDesc;
+
+  @ManyToMany
+  @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "role_id"),
+          inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private Set<User> users = new HashSet<>();
 
   /**
    * 创建时间
