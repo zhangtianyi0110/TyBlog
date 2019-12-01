@@ -1,4 +1,4 @@
-package com.ty.blog.pojo;
+package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
 import lombok.AllArgsConstructor;
@@ -6,17 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,6 +32,7 @@ public class Role implements Serializable {
    */
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @Column(name = "role_id")
   private int id;
 
   /**
@@ -56,10 +47,24 @@ public class Role implements Serializable {
   @Column(name = "role_desc")
   private String roleDesc;
 
-  @ManyToMany
-  @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "role_id"),
-          inverseJoinColumns = @JoinColumn(name = "user_id"))
+  /**
+   * 维护用户与角色关系
+   * 角色放弃维护权
+   */
+  @Builder.Default
+  @ManyToMany(mappedBy = "roles")
   private Set<User> users = new HashSet<>();
+
+  /**
+   * 维护角色和权限关系
+   * 角色为维护权主控方
+   */
+  @Builder.Default
+  @ManyToMany(targetEntity = Perm.class)
+  @JoinTable(name = TableNameConsts.TY_ROLE_PERM,
+          joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")},
+          inverseJoinColumns = {@JoinColumn(name = "perm_id", referencedColumnName = "perm_id")})
+  private Set<Perm> perms = new HashSet<>();
 
   /**
    * 创建时间

@@ -1,4 +1,4 @@
-package com.ty.blog.pojo;
+package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: Perm
@@ -30,6 +32,7 @@ public class Perm implements Serializable {
    */
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @Column(name = "perm_id")
   private int id;
 
   /**
@@ -37,6 +40,28 @@ public class Perm implements Serializable {
    */
   @Column(name = "perm", unique = true, nullable = false)
   private String perm;
+
+  /**
+   * 权限描述
+   */
+  @Column(name = "perm_desc", unique = true, nullable = false)
+  private String permDesc;
+
+  /**
+   * 维护权限与角色关系
+   * 权限方放弃维护权
+   */
+  @Builder.Default
+  @ManyToMany(mappedBy = "perms")
+  private Set<Role> roles = new HashSet<>();
+
+  /**
+   * 维护权限与用户关系
+   * 权限方放弃维护权
+   */
+  @Builder.Default
+  @ManyToMany(mappedBy = "perms")
+  private Set<User> users = new HashSet<>();
 
   /**
    * 创建时间

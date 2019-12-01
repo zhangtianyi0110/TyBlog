@@ -1,8 +1,8 @@
 package com.ty.blog.service;
 
 import com.ty.blog.base.BaseService;
-import com.ty.blog.pojo.Article;
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.Article;
+import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;

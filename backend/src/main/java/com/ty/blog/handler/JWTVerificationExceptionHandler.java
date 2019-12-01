@@ -1,7 +1,7 @@
 package com.ty.blog.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package com.ty.blog.service;
 
 import com.ty.blog.base.BaseService;
-import com.ty.blog.pojo.User;
+import com.ty.blog.entity.User;
 import com.ty.blog.shiro.jwt.JwtUtil;
 import com.ty.blog.util.GsonUtil;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.ty.blog.handler;
 
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;

@@ -1,6 +1,6 @@
 package com.ty.blog.dao;
 
-import com.ty.blog.pojo.Perm;
+import com.ty.blog.entity.Perm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

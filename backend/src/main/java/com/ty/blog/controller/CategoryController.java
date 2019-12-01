@@ -1,8 +1,8 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
-import com.ty.blog.pojo.Category;
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.Category;
+import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.GetMapping;

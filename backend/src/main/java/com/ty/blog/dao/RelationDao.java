@@ -1,6 +1,6 @@
 package com.ty.blog.dao;
 
-import com.ty.blog.pojo.Relation;
+import com.ty.blog.entity.Relation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

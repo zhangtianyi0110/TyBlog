@@ -1,7 +1,7 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

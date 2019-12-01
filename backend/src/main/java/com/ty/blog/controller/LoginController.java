@@ -2,8 +2,8 @@ package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
 import com.ty.blog.constant.SecurityConsts;
-import com.ty.blog.pojo.ResponseData;
-import com.ty.blog.pojo.User;
+import com.ty.blog.entity.ResponseData;
+import com.ty.blog.entity.User;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtConfig;
 import com.ty.blog.shiro.jwt.JwtRedisCache;

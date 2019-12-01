@@ -1,7 +1,7 @@
 package com.ty.blog.util;
 
 import com.ty.blog.constant.ResponseCodeConsts;
-import com.ty.blog.pojo.ResponseData;
+import com.ty.blog.entity.ResponseData;
 
 /**
  * @ClassName: ResponseUtil

@@ -2,7 +2,7 @@ package com.ty.blog.shiro;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.ty.blog.constant.SecurityConsts;
-import com.ty.blog.pojo.User;
+import com.ty.blog.entity.User;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtToken;

@@ -53,4 +53,20 @@ public class TableNameConsts {
      * 友情链接表
      */
     public static final String TY_LINK = "ty_link";
+
+    /**
+     * 用户角色关系表
+     */
+    public static final String TY_USER_ROLE = "ty_user_role";
+
+    /**
+     * 角色权限关系表
+     */
+    public static final String TY_ROLE_PERM = "ty_role_perm";
+
+    /**
+     * 用户权限关系表
+     */
+    public static final String TY_USER_PERM = "ty_user_perm";
+
 }

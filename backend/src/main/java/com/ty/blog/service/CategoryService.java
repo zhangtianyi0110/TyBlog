@@ -2,9 +2,9 @@ package com.ty.blog.service;
 
 import com.ty.blog.base.BaseService;
 import com.ty.blog.constant.RelationTypeConsts;
-import com.ty.blog.pojo.Article;
-import com.ty.blog.pojo.Category;
-import com.ty.blog.pojo.Relation;
+import com.ty.blog.entity.Article;
+import com.ty.blog.entity.Category;
+import com.ty.blog.entity.Relation;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

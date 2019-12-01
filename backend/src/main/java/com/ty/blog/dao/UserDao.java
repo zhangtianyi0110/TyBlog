@@ -1,7 +1,7 @@
 package com.ty.blog.dao;
 
 import com.ty.blog.constant.RelationTypeConsts;
-import com.ty.blog.pojo.User;
+import com.ty.blog.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

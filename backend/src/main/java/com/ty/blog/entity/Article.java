@@ -1,4 +1,4 @@
-package com.ty.blog.pojo;
+package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
@@ -8,14 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -45,16 +38,14 @@ public class Article implements Serializable {
      * 作者,多对一，设置外键
      */
     @ApiModelProperty(value = "作者,多对一，设置外键", required = true)
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
+    @Column(name = "author_id", nullable = false)
     private User author;
 
     /**
      * 原作者
      */
     @ApiModelProperty(value = "原作者,多对一，设置外键", required = true)
-    @ManyToOne
-    @JoinColumn(name = "original_author_id")
+    @Column(name = "original_author_id")
     private User originalAuthor;
 
     /**
@@ -74,7 +65,6 @@ public class Article implements Serializable {
     /**
      * 文章标签
      */
-    @OneToMany
     @Column(name = "tags", nullable = false)
     private String tags;
 

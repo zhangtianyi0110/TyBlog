@@ -1,6 +1,6 @@
 package com.ty.blog.dao;
 
-import com.ty.blog.pojo.Category;
+import com.ty.blog.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
