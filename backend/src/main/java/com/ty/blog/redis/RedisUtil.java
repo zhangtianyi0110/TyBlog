@@ -1,4 +1,4 @@
-package com.ty.blog.util;
+package com.ty.blog.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,11 +20,12 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/9/10 11:32
  *
  */
-
 @Component
 public final class RedisUtil {
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
     // ============================common=============================
     /**
      * 指定缓存失效时间
@@ -351,8 +352,9 @@ public final class RedisUtil {
     public long sSetAndTime(String key, long time, Object... values) {
         try {
             Long count = redisTemplate.opsForSet().add(key, values);
-            if (time > 0)
+            if (time > 0){
                 expire(key, time);
+            }
             return count;
         } catch (Exception e) {
             e.printStackTrace();
@@ -434,7 +436,6 @@ public final class RedisUtil {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @param time 时间(秒)
      * @return
      */
     public boolean lSet(String key, Object value) {
@@ -456,8 +457,9 @@ public final class RedisUtil {
     public boolean lSet(String key, Object value, long time) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
-            if (time > 0)
+            if (time > 0){
                 expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -468,7 +470,6 @@ public final class RedisUtil {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @param time 时间(秒)
      * @return
      */
     public boolean lSet(String key, List<Object> value) {
@@ -491,8 +492,9 @@ public final class RedisUtil {
     public boolean lSet(String key, List<Object> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
-            if (time > 0)
+            if (time > 0){
                 expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();

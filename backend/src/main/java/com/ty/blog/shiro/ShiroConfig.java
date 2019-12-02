@@ -1,9 +1,7 @@
 package com.ty.blog.shiro;
 
 import com.ty.blog.shiro.cache.ShiroRedisCacheManager;
-import com.ty.blog.shiro.jwt.JwtConfig;
 import com.ty.blog.shiro.jwt.JwtFilter;
-import com.ty.blog.shiro.jwt.JwtRedisCache;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -23,21 +21,15 @@ import java.util.LinkedHashMap;
  *  @Description: Shiro配置类
  *  @author: zhangtianyi
  *  @Date: 2019-09-04 21:02
- *
+ *  @DependsOn: 在JwtProperties后加载
  */
-
 @Configuration
-/**
- * 在JwtProperties后加载
- */
 @DependsOn({"jwtConfig","redisConfig"})
 public class ShiroConfig {
     private Logger log = LoggerFactory.getLogger(ShiroConfig.class);
 
     @Autowired
-    private JwtConfig jwtConfig;
-    @Autowired
-    private JwtRedisCache jwtRedisCache;
+    private JwtFilter jwtFilter;
     @Autowired
     private ShiroRedisCacheManager shiroRedisCacheManager;
 
@@ -96,7 +88,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized/**");
         // 在 Shiro过滤器链上加入 JwtFilter
         LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
-        filters.put("jwt", new JwtFilter(jwtRedisCache, jwtConfig));
+        filters.put("jwt", jwtFilter);
         shiroFilterFactoryBean.setFilters(filters);
 
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();

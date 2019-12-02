@@ -1,11 +1,13 @@
 package com.ty.blog.base;
 
-import com.ty.blog.dao.*;
+import com.ty.blog.dao.ArticleDao;
+import com.ty.blog.dao.CategoryDao;
+import com.ty.blog.dao.RelationDao;
+import com.ty.blog.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @ClassName: BaseService
@@ -18,12 +20,12 @@ import javax.annotation.Resource;
 public class BaseService {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Resource
+    @Autowired
     protected UserDao userDao;
-    @Resource
+    @Autowired
     protected RelationDao relationDao;
-    @Resource
+    @Autowired
     protected ArticleDao articleDao;
-    @Resource
+    @Autowired
     protected CategoryDao categoryDao;
 }

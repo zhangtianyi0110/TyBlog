@@ -9,25 +9,30 @@ import com.ty.blog.constant.SecurityConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+/**
+ *  @ClassName: JwtUtil
+ *  @Description: Jwt工具类
+ *  @author zhangtianyi
+ *  @Date 2019/12/2 11:29
+ */
 @Component
 public class JwtUtil {
-
-    @Autowired
-    JwtConfig jwtConfig;
-
-    @Autowired
-    private static JwtUtil jwtUtil;
+    
+    static JwtConfig staticJwtConfig;
 
     private static final String UNKNOWN = "unknow";
 
-    @PostConstruct
-    public void init() {
-        jwtUtil = this;
-        jwtUtil.jwtConfig = this.jwtConfig;
+
+    /**
+     * 为了使用static，先把static初始化为null
+     * 再componet注册完成后将注册的JwtConfig赋值给static对象
+     */
+    @Autowired
+    public void init(JwtConfig jwtConfig) {
+        staticJwtConfig = jwtConfig;
     }
 
     /**
@@ -37,7 +42,7 @@ public class JwtUtil {
      */
     public static boolean verify(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtUtil.jwtConfig.getSecretKey());
+            Algorithm algorithm = Algorithm.HMAC256(staticJwtConfig.getSecretKey());
             JWTVerifier verifier = JWT.require(algorithm)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
@@ -78,8 +83,8 @@ public class JwtUtil {
      */
     public static String sign(String username,  String currentTimeMillis) {
         //过期时间毫秒
-        Date date = new Date(System.currentTimeMillis() + jwtUtil.jwtConfig.getTokenExpireTime()*60*1000);
-        Algorithm algorithm = Algorithm.HMAC256(jwtUtil.jwtConfig.getSecretKey());
+        Date date = new Date(System.currentTimeMillis() + staticJwtConfig.getTokenExpireTime()*60*1000);
+        Algorithm algorithm = Algorithm.HMAC256(staticJwtConfig.getSecretKey());
         //创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
         return JWT.create()
                 .withClaim(SecurityConsts.USERNAME, username)

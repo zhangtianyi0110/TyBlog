@@ -4,7 +4,6 @@ import com.ty.blog.base.BaseController;
 import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.entity.ResponseData;
 import com.ty.blog.entity.User;
-import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtConfig;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtUtil;
@@ -16,15 +15,14 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -40,12 +38,10 @@ import java.util.Map;
 public class LoginController extends BaseController {
 
 
-    @Resource
+    @Autowired
     private JwtRedisCache jwtRedisCache;
-    @Resource
+    @Autowired
     private JwtConfig jwtConfig;
-    @Resource
-    private UserService userService;
 
 //    @GetMapping("/login")
 //    public String login(){
@@ -139,8 +135,5 @@ public class LoginController extends BaseController {
         model.addAttribute("user", user);
         return ResponseUtil.success("success", null);
     }
-    @GetMapping("/unauthorized/{message}")
-    public ResponseData forbid(@PathVariable String message) {
-        return ResponseUtil.failure(403,message);
-    }
+
 }

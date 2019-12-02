@@ -1,6 +1,6 @@
 package com.ty.blog.shiro.jwt;
 
-import com.ty.blog.util.RedisUtil;
+import com.ty.blog.redis.RedisUtil;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +11,36 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ *  @ClassName: JwtRedisCache
+ *  @Description: JwtRedisCache缓存类
+ *  @author zhangtianyi
+ *  @Date 2019/12/2 14:30
+ */
 @Component
-//@DependsOn({"jwtConfig"})
 public class JwtRedisCache<K,V> implements Cache<K,V> {
 
     @Autowired
     private RedisUtil redisUtil;
-    private final JwtConfig jwtConfig;
 
-    private final String CACHE_PREFIX = "jwt:";//定义键前缀
-    // 超时时间设置(分钟)
-//    public static final int DEFAULT_EXPIRE = 30;
+    /**
+     * 定义键前缀
+     */
+    private final String CACHE_PREFIX = "jwt:";
+
     public static final int SECOND = 60;
+    /**
+     * 超时时间设置(秒)
+     */
     private int expire;
 
+    /**
+     * 构造器注入初始化 expire
+     * @param jwtConfig jwt配置文件对象
+     */
     @Autowired
     public JwtRedisCache(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
-        this.expire = jwtConfig.getRefreshTokenExpireTime() * SECOND;
+        expire = jwtConfig.getRefreshTokenExpireTime() * SECOND;
     }
 
     private String getKey(K k){

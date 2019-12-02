@@ -40,7 +40,8 @@ public class ShiroExceptionHandler {
         }else if(e instanceof IncorrectCredentialsException){
             return ResponseUtil.failure(401,"用户名或密码错误");
         }
-        return ResponseUtil.failure(401,"认证失败！");//异常回传信息
+        //异常回传信息
+        return ResponseUtil.failure(401,"认证失败！");
     }
     /**
      * 对shiro授权抛出的异常统一处理

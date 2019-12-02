@@ -1,15 +1,14 @@
 package com.ty.blog.shiro.cache;
 
 import com.ty.blog.constant.SecurityConsts;
+import com.ty.blog.redis.RedisUtil;
 import com.ty.blog.shiro.jwt.JwtConfig;
-import com.ty.blog.util.RedisUtil;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,13 +23,8 @@ import java.util.Set;
 public class ShiroRedisCache<K,V> implements Cache<K,V> {
 
 
-    @Resource
+    @Autowired
     private RedisUtil redisUtil;
-
-    /**
-     * jwt配置对象
-     */
-    private final JwtConfig jwtConfig;
 
     /**
      * shiro缓存前缀
@@ -47,9 +41,12 @@ public class ShiroRedisCache<K,V> implements Cache<K,V> {
      */
     private int expire;
 
+    /**
+     * 出事haul过期时间
+     * @param jwtConfig jwt配置文件对象
+     */
     @Autowired
     public ShiroRedisCache(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
         this.expire = jwtConfig.getRefreshTokenExpireTime() * SECOND;
     }
 

@@ -1,12 +1,23 @@
 package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,7 +30,9 @@ import java.util.Set;
  * @date 2019/9/16 11:51
  *
  */
-@Data
+@ApiModel("权限实体")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,12 +51,14 @@ public class Perm implements Serializable {
   /**
    * 权限名
    */
+  @ApiModelProperty(value = "权限名", required = true)
   @Column(name = "perm", unique = true, nullable = false)
   private String perm;
 
   /**
    * 权限描述
    */
+  @ApiModelProperty("权限描述")
   @Column(name = "perm_desc", unique = true, nullable = false)
   private String permDesc;
 
@@ -51,6 +66,7 @@ public class Perm implements Serializable {
    * 维护权限与角色关系
    * 权限方放弃维护权
    */
+  @ApiModelProperty("维护权限与角色关系")
   @Builder.Default
   @ManyToMany(mappedBy = "perms")
   private Set<Role> roles = new HashSet<>();
@@ -59,6 +75,7 @@ public class Perm implements Serializable {
    * 维护权限与用户关系
    * 权限方放弃维护权
    */
+  @ApiModelProperty("维护权限与用户关系")
   @Builder.Default
   @ManyToMany(mappedBy = "perms")
   private Set<User> users = new HashSet<>();
@@ -66,6 +83,7 @@ public class Perm implements Serializable {
   /**
    * 创建时间
    */
+  @ApiModelProperty("创建时间")
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_time", nullable = false, length = 30)
   private Date createTime;
@@ -73,6 +91,7 @@ public class Perm implements Serializable {
   /**
    * 最后修改时间
    */
+  @ApiModelProperty("最后修改时间")
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "modify_time", nullable = false)
   private Date modifyTime;

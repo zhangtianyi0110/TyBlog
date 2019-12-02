@@ -9,7 +9,9 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,25 +30,18 @@ import java.net.URLEncoder;
  *  @Date: 2019-09-04 21:28
  *
  */
-
+@Component
 public class JwtFilter extends BasicHttpAuthenticationFilter {
-    private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private static final String AUTHORIZATION = "Authorization";
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private AntPathMatcher pathMatcher = new AntPathMatcher();
 
+    @Autowired
     private JwtRedisCache jwtRedisCache;
 
+    @Autowired
     private JwtConfig jwtConfig;
-
-    public JwtFilter() {
-    }
-
-    public JwtFilter(JwtRedisCache jwtRedisCache, JwtConfig jwtConfig) {
-        this.jwtRedisCache = jwtRedisCache;
-        this.jwtConfig = jwtConfig;
-    }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response,
@@ -58,25 +53,41 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             try {
                 this.executeLogin(request, response);
             } catch (Exception e) {
+                Integer code = 401;
                 String msg = e.getMessage();
-                Throwable throwable = e.getCause();
-                if (throwable != null && throwable instanceof SignatureVerificationException) {
-                    msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
-                } else if (throwable != null && throwable instanceof TokenExpiredException) {
+                if(e != null && e instanceof SignatureVerificationException){
+                    msg = "Token或者密钥不正确(" + e.getMessage() + ")";
+                } else if (e != null && e instanceof TokenExpiredException) {
                     // AccessToken已过期,但在刷新期内，刷新token
                     if (this.refreshToken(request, response)) {
                         return true;
                     } else {
-                        msg = "Token已过期(" + throwable.getMessage() + ")";
+                        msg = "Token已过期(" + e.getMessage() + ")";
                     }
                 } else {
-                    if (throwable != null) {
-                        msg = throwable.getMessage();
+                    if (e != null) {
+                        msg = e.getMessage();
                     }
                 }
+//                Throwable throwable = e.getCause();
+//                if (throwable != null && throwable instanceof SignatureVerificationException) {
+//                    msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
+//                } else if (throwable != null && throwable instanceof TokenExpiredException) {
+//                    // AccessToken已过期,但在刷新期内，刷新token
+//                    if (this.refreshToken(request, response)) {
+//                        return true;
+//                    } else {
+//                        msg = "Token已过期(" + throwable.getMessage() + ")";
+//                    }
+//                } else {
+//                    if (throwable != null) {
+//                        msg = throwable.getMessage();
+//                    }
+//                }
                 //token 错误
-                log.error("认证不通过，请重新登录！");
-                this.response401(request,response,msg);
+                log.error("认证不通过，请重新登录！", e);
+                this.requestError(request, response, code, msg);
+//                this.response401(request,response,msg);
                 return false;
             }
         }
@@ -90,7 +101,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getHeader(AUTHORIZATION);
+        String token = req.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
         return token != null;
     }
 
@@ -101,7 +112,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader(AUTHORIZATION);
+        String token = httpServletRequest.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
         JwtToken jwtToken = new JwtToken(token);
 
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
@@ -199,6 +210,24 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             message = URLEncoder.encode(message, "UTF-8");
             httpServletResponse.sendRedirect("/unauthorized/" + message);
         } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 将非法请求转发到 /unauthorized/**
+     */
+    private void requestError(ServletRequest request, ServletResponse response,
+                              Integer code, String message) {
+        try {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            httpServletRequest.setAttribute("code", code);
+            httpServletRequest.setAttribute("message", message);
+            //转发到ErrorController
+            httpServletRequest
+                    .getRequestDispatcher("/unauthorized/" + message)
+                    .forward(httpServletRequest, response);
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }

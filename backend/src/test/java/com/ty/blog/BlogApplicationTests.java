@@ -11,42 +11,48 @@ import com.ty.blog.dao.RelationDao;
 import com.ty.blog.dao.RoleDao;
 import com.ty.blog.dao.TagDao;
 import com.ty.blog.dao.UserDao;
+import com.ty.blog.entity.Perm;
+import com.ty.blog.entity.Role;
+import com.ty.blog.entity.User;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.util.MaxIdUtil;
-import com.ty.blog.util.RedisUtil;
+import com.ty.blog.util.Md5Util;
+import com.ty.blog.redis.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BlogApplicationTests {
 
-    @Resource
+    @Autowired
     protected UserService userService;
-    @Resource
+    @Autowired
     protected UserDao userDao;
-    @Resource
+    @Autowired
     protected RoleDao roleDao;
-    @Resource
+    @Autowired
     protected PermDao permDao;
-    @Resource
+    @Autowired
     protected RelationDao relationDao;
-    @Resource
+    @Autowired
     protected ArticleDao articleDao;
-    @Resource
+    @Autowired
     protected CategoryDao categoryDao;
-    @Resource
+    @Autowired
     protected TagDao tagDao;
-    @Resource
+    @Autowired
     protected CommentDao commentDao;
-    @Resource
+    @Autowired
     protected LinkDao linkDao;
 
     @Autowired
@@ -55,6 +61,56 @@ public class BlogApplicationTests {
     RedisUtil redisUtil;
     @Autowired
     MaxIdUtil maxIdUtil;
+
+    static User user;
+    static Role role;
+    static Perm perm;
+    static Perm extraPerm;
+
+    static {
+        //用户
+        user = User.builder()
+                .username("tyblog")
+                .password(Md5Util.encrypt("123456", "tyblog"))
+                .gender("男")
+                .name("张小生")
+                .nickname("tyblog")
+                .birthday(new Date())
+                .email("tyblog@qq.com")
+                .profile("hello world,我是tyblog。")
+                .avatarUrl("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1719911752,2197523375&fm=26&gp=0.jpg")
+                .githubId("zhangtianyi0110")
+                .githubUrl("https://github.com/zhangtianyi0110")
+                .lastLoginTime(new Date())
+                .createTime(new Date())
+                .modifyTime(new Date()).build();
+        //角色
+        role = Role.builder()
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .roleName("blogger")
+                .roleDesc("博主").build();
+        //角色权限
+        perm = Perm.builder()
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .perm("article:*")
+                .permDesc("文章类增删改查").build();
+        //额外权限
+        extraPerm = Perm.builder()
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .perm("user:get")
+                .permDesc("用户类获取信息").build();
+        //维护关系
+        user.getRoles().add(role);
+        user.getPerms().add(extraPerm);
+        role.getUsers().add(user);
+        role.getPerms().add(perm);
+        perm.getRoles().add(role);
+        extraPerm.getUsers().add(user);
+
+    }
 
     @Test
     public void contextLoads() {
@@ -65,6 +121,20 @@ public class BlogApplicationTests {
                 "三，无限的算法，是那些由于没有定义终止定义条件，或定义的条件无法由输入的数据满足而不终止运行的算法。通常，无限算法的产生是由于未能确定的定义终止条件。";
         List<String> sentenceList = HanLP.extractSummary(document, 3);
         System.out.println(sentenceList);
+    }
+
+    /**
+     * 添加用户角色权限数据
+     */
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void addUserRolePermInfo(){
+        userDao.save(user);
+        roleDao.save(role);
+        permDao.save(perm);
+        permDao.save(extraPerm);
+
     }
 
     /**

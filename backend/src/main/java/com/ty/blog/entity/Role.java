@@ -1,12 +1,25 @@
 package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,7 +32,9 @@ import java.util.Set;
  * @date 2019/9/16 11:51
  *
  */
-@Data
+@ApiModel("角色实体")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,12 +53,14 @@ public class Role implements Serializable {
   /**
    * 角色名
    */
+  @ApiModelProperty(value = "角色名", required = true)
   @Column(name = "role_name", unique = true, nullable = false)
   private String roleName;
 
   /**
    * 角色描述
    */
+  @ApiModelProperty(value = "角色描述")
   @Column(name = "role_desc")
   private String roleDesc;
 
@@ -51,6 +68,7 @@ public class Role implements Serializable {
    * 维护用户与角色关系
    * 角色放弃维护权
    */
+  @ApiModelProperty(value = "维护用户与角色关系")
   @Builder.Default
   @ManyToMany(mappedBy = "roles")
   private Set<User> users = new HashSet<>();
@@ -59,6 +77,7 @@ public class Role implements Serializable {
    * 维护角色和权限关系
    * 角色为维护权主控方
    */
+  @ApiModelProperty(value = "维护角色和权限关系")
   @Builder.Default
   @ManyToMany(targetEntity = Perm.class)
   @JoinTable(name = TableNameConsts.TY_ROLE_PERM,
@@ -69,6 +88,7 @@ public class Role implements Serializable {
   /**
    * 创建时间
    */
+  @ApiModelProperty("创建时间")
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_time", nullable = false, length = 30)
   private Date createTime;
@@ -76,6 +96,7 @@ public class Role implements Serializable {
   /**
    * 最后修改时间
    */
+  @ApiModelProperty("最后修改时间")
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "modify_time", nullable = false)
   private Date modifyTime;
