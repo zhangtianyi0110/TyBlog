@@ -4,6 +4,8 @@ import com.ty.blog.shiro.jwt.JwtConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.context.request.RequestContextListener;
 
 /**
  * @ClassName: BlogApplication
@@ -24,10 +26,10 @@ public class BlogApplication {
      * 监听用于静态获取request等
      * @return
      */
-//    @Bean
-//    public RequestContextListener requestContextListener(){
-//        return new RequestContextListener();
-//    }
+    @Bean
+    public RequestContextListener requestContextListener(){
+        return new RequestContextListener();
+    }
 
 
 }
