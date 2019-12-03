@@ -9,9 +9,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,18 +28,20 @@ import java.net.URLEncoder;
  *  @Date: 2019-09-04 21:28
  *
  */
-@Component
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    @Autowired
     private JwtRedisCache jwtRedisCache;
 
-    @Autowired
     private JwtConfig jwtConfig;
+
+    public JwtFilter(JwtRedisCache jwtRedisCache, JwtConfig jwtConfig) {
+        this.jwtRedisCache = jwtRedisCache;
+        this.jwtConfig = jwtConfig;
+    }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response,
@@ -86,7 +86,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 //                }
                 //token 错误
                 log.error("认证不通过，请重新登录！", e);
-                this.requestError(request, response, code, msg);
+                this.requestError(request, response,
+                        ResponseData.builder().code(code).message(msg).data(e).build());
 //                this.response401(request,response,msg);
                 return false;
             }
@@ -217,16 +218,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     /**
      * 将非法请求转发到 /unauthorized/**
      */
-    private void requestError(ServletRequest request, ServletResponse response,
-                              Integer code, String message) {
+    private void requestError(ServletRequest servletRequest, ServletResponse servletResponse,
+                              ResponseData responseData) {
         try {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            httpServletRequest.setAttribute("code", code);
-            httpServletRequest.setAttribute("message", message);
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            request.setAttribute(SecurityConsts.FILTER_EXCEPTION, responseData);
             //转发到ErrorController
-            httpServletRequest
-                    .getRequestDispatcher("/unauthorized/" + message)
-                    .forward(httpServletRequest, response);
+            request.getRequestDispatcher("/unauthorized/" + responseData.getMessage())
+                    .forward(request, response);
         } catch (Exception e) {
             log.error(e.getMessage());
         }

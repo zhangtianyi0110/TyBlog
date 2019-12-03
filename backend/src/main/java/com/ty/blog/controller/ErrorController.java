@@ -3,8 +3,7 @@ package com.ty.blog.controller;
 import com.ty.blog.base.BaseController;
 import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,8 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("unauthorized")
 public class ErrorController extends BaseController {
 
-    @GetMapping("{message}")
-    public ResponseData forbid(@PathVariable String message) {
+//    @GetMapping("{message}")
+//    public ResponseData forbid(@PathVariable String message) {
+//        return ResponseUtil.failure((int)request.getAttribute("code"), message);
+//    }
+    @RequestMapping("rethrow")
+    public ResponseData forbid() {
+        String message = (String) request.getAttribute("message");
+
         return ResponseUtil.failure((int)request.getAttribute("code"), message);
     }
 }

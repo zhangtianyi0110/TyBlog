@@ -14,11 +14,11 @@ import com.ty.blog.dao.UserDao;
 import com.ty.blog.entity.Perm;
 import com.ty.blog.entity.Role;
 import com.ty.blog.entity.User;
+import com.ty.blog.redis.RedisUtil;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.util.MaxIdUtil;
 import com.ty.blog.util.Md5Util;
-import com.ty.blog.redis.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Date;
 import java.util.List;
@@ -253,7 +254,25 @@ public class BlogApplicationTests {
 //
 //    }
 
+    @Test
+    @Transactional(rollbackFor = {Exception.class})
+    public void test(){
+        try {
+            test1();
+            test2();
+        } catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+    }
 
+    public void test1(){
+
+    }
+
+    public void test2(){
+
+    }
     @Test
     public void getPermByUsername(){
         System.out.println(maxIdUtil.getMaxId(TableNameConsts.TY_RELATION));

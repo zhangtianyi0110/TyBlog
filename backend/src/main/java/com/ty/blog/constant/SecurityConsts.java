@@ -38,4 +38,10 @@ public class SecurityConsts {
      * JWT-currentTimeMillis
      */
     public final static String CURRENT_TIME_MILLIS = "currentTimeMillis";
+
+    /**
+     * 过滤器异常
+     */
+    public final static String FILTER_EXCEPTION = "filter_exception";
+
 }

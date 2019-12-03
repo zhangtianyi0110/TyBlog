@@ -67,6 +67,11 @@ public class ShiroRealm extends AuthorizingRealm {
 
         //获取ip与redis中ip对比
         String ipRedis = (String) jwtRedisCache.get(SecurityConsts.IP_TOKEN + username);
+//        if(ipRedis == null){
+//            throw new AuthenticationException("ip已过期，请重新登录！");
+//        } else if(!JwtUtil.getIpAddress(request).equals(ipRedis)){
+//            throw new AuthenticationException("不是正常ip，token可能被盗用");
+//        }
         if(!JwtUtil.getIpAddress(request).equals(ipRedis)){
             throw new AuthenticationException("不是正常ip，token可能被盗用");
         }

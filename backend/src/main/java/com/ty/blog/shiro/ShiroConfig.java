@@ -1,7 +1,9 @@
 package com.ty.blog.shiro;
 
 import com.ty.blog.shiro.cache.ShiroRedisCacheManager;
+import com.ty.blog.shiro.jwt.JwtConfig;
 import com.ty.blog.shiro.jwt.JwtFilter;
+import com.ty.blog.shiro.jwt.JwtRedisCache;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -11,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
@@ -21,15 +22,12 @@ import java.util.LinkedHashMap;
  *  @Description: Shiro配置类
  *  @author: zhangtianyi
  *  @Date: 2019-09-04 21:02
- *  @DependsOn: 在JwtProperties后加载
+ *
  */
 @Configuration
-@DependsOn({"jwtConfig","redisConfig"})
 public class ShiroConfig {
     private Logger log = LoggerFactory.getLogger(ShiroConfig.class);
 
-    @Autowired
-    private JwtFilter jwtFilter;
     @Autowired
     private ShiroRedisCacheManager shiroRedisCacheManager;
 
@@ -44,7 +42,6 @@ public class ShiroConfig {
         return customRealm;
     }
 
-
     /**
      * 注入自定义realm、EhCacheManager/ReidsCacheManager对象
      * @return SecurityManager
@@ -58,7 +55,6 @@ public class ShiroConfig {
         securityManager.setCacheManager(shiroRedisCacheManager);
         return securityManager;
     }
-
 
     /**
      * 开启shiro注解
@@ -75,11 +71,14 @@ public class ShiroConfig {
 
     /**
      * 配置shiro的web过滤器,是shiro的核心配置,shiro的所有功能都基于这个对象
+     * 自定义过滤器需要在shirofilter后加载
      * @param securityManager
+     * @param jwtFilter 自定义jwt过滤器
      * @return
      */
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(
+            SecurityManager securityManager, JwtFilter jwtFilter) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login");
@@ -101,6 +100,17 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
+    }
+
+    /**
+     * jwtFilter实例，要在shirofilter后再加载，所以这个bean和上一个bean位置不能调换
+     * @param jwtRedisCache 从spring容器中取出jwtRedisCache实例
+     * @param jwtConfig 从spring容器中取出jwtConfig实例
+     * @return
+     */
+    @Bean
+    public JwtFilter jwtFilter(JwtRedisCache jwtRedisCache, JwtConfig jwtConfig){
+        return new JwtFilter(jwtRedisCache, jwtConfig);
     }
 }
 

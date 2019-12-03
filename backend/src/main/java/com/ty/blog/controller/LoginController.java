@@ -18,6 +18,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -135,5 +136,8 @@ public class LoginController extends BaseController {
         model.addAttribute("user", user);
         return ResponseUtil.success("success", null);
     }
-
+    @GetMapping("/unauthorized/{message}")
+    public ResponseData forbid(@PathVariable String message) {
+        return ResponseUtil.failure(403,message);
+    }
 }
