@@ -20,4 +20,14 @@ public class BlogApplication {
         SpringApplication.run(BlogApplication.class, args);
     }
 
+    /**
+     * 监听用于静态获取request等
+     * @return
+     */
+//    @Bean
+//    public RequestContextListener requestContextListener(){
+//        return new RequestContextListener();
+//    }
+
+
 }
