@@ -82,6 +82,7 @@ public class BlogApplicationTests {
                 .avatarUrl("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1719911752,2197523375&fm=26&gp=0.jpg")
                 .githubId("zhangtianyi0110")
                 .githubUrl("https://github.com/zhangtianyi0110")
+                .isAdmin(true)
                 .lastLoginTime(new Date())
                 .createTime(new Date())
                 .modifyTime(new Date()).build();

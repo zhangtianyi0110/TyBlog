@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /dev-api
+    context-path: /api
 
 # JPA 配置
 spring:

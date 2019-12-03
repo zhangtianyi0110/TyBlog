@@ -42,12 +42,12 @@ public class ShiroRedisCache<K,V> implements Cache<K,V> {
     private int expire;
 
     /**
-     * 出事haul过期时间
+     * 初始化shiro缓存过期时间
      * @param jwtConfig jwt配置文件对象
      */
     @Autowired
     public ShiroRedisCache(JwtConfig jwtConfig) {
-        this.expire = jwtConfig.getRefreshTokenExpireTime() * SECOND;
+        this.expire = jwtConfig.getShiroCacheExpireTime() * SECOND;
     }
 
     private String getKey(K k){

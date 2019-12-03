@@ -4,24 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -65,37 +50,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "密码,长度大于6", required = true, allowableValues = "123456")
     @Column(name = "password", nullable = false)
     private String password;
-
-    /**
-     * 用户角色两者的关系表，由两者的主键ID组成,
-     * joinColumns指定主表的外键,
-     * inverseJoinColumns指定匹配表的外键
-     * 用户拥有的不同角色
-     * @Builder.Default:支持默认值设置的builder
-     */
-    @ApiModelProperty("用户角色集合")
-    @Builder.Default
-    @ManyToMany(targetEntity = Role.class)
-    @JoinTable(name = TableNameConsts.TY_USER_ROLE,
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
-    private Set<Role> roles = new HashSet<>();
-
-    /**
-     * 用户的额外权限
-     * 用户权限两者的关系表，由两者的主键ID组成,
-     * joinColumns指定主表的外键,
-     * inverseJoinColumns指定匹配表的外键
-     * 用户拥有的不同角色
-     * @Builder.Default:支持默认值设置的builder
-     */
-    @ApiModelProperty("用户除角色拥有的权限之外的权限集合")
-    @Builder.Default
-    @ManyToMany(targetEntity = Perm.class)
-    @JoinTable(name = TableNameConsts.TY_USER_PERM,
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "perm_id", referencedColumnName = "perm_id")})
-    private Set<Perm> perms = new HashSet<>();
 
     /**
      * 性别
@@ -163,6 +117,46 @@ public class User implements Serializable {
     @Lob
     @Column(name = "github_url", columnDefinition = "TEXT")
     private String githubUrl;
+
+    /**
+     * 用户是否是超级管理员
+     */
+    @ApiModelProperty("github链接")
+    @Builder.Default
+    @Lob
+    @Column(name = "is_admin")
+    private Boolean isAdmin = false;
+
+    /**
+     * 用户角色两者的关系表，由两者的主键ID组成,
+     * joinColumns指定主表的外键,
+     * inverseJoinColumns指定匹配表的外键
+     * 用户拥有的不同角色
+     * @Builder.Default:支持默认值设置的builder
+     */
+    @ApiModelProperty("用户角色集合")
+    @Builder.Default
+    @ManyToMany(targetEntity = Role.class)
+    @JoinTable(name = TableNameConsts.TY_USER_ROLE,
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
+    private Set<Role> roles = new HashSet<>();
+
+    /**
+     * 用户的额外权限
+     * 用户权限两者的关系表，由两者的主键ID组成,
+     * joinColumns指定主表的外键,
+     * inverseJoinColumns指定匹配表的外键
+     * 用户拥有的不同角色
+     * @Builder.Default:支持默认值设置的builder
+     */
+    @ApiModelProperty("用户除角色拥有的权限之外的权限集合")
+    @Builder.Default
+    @ManyToMany(targetEntity = Perm.class)
+    @JoinTable(name = TableNameConsts.TY_USER_PERM,
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "perm_id", referencedColumnName = "perm_id")})
+    private Set<Perm> perms = new HashSet<>();
 
     /**
      * 最后一次登录时间

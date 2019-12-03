@@ -57,10 +57,16 @@ public class ShiroRealm extends AuthorizingRealm {
         log.info("-----doGetAuthenticationInfo 开始-----");
         // 这里的 token是从 JwtFilter 的 executeLogin 方法传递过来的
         String token = (String) authenticationToken.getCredentials();
-        //1.从token中获取用户名，因为用户名不是私密直接获取
+        // 1.从token中获取用户名，因为用户名不是私密直接获取
         String username = JwtUtil.getUsername(token);
-        //2.通过用户名到数据库中获取角色权限数据
-        User user = userService.findByUsername(username);
+        // 2.从request中取
+        User user = (User) request.getAttribute(username);
+        if(user == null ){
+            user = userService.findByUsername(username);
+        }
+
+        // 3.request没有通过用户名到数据库中获取角色权限数据
+       // User user = userService.findByUsername(username);
         if(user == null ){
             throw new AuthenticationException("用户名或密码错误");
         }
