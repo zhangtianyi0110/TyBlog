@@ -18,14 +18,15 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("error")
 public class ErrorController extends BaseController {
 
-//    @GetMapping("{message}")
-//    public ResponseData forbid(@PathVariable String message) {
-//        return ResponseUtil.failure((int)request.getAttribute("code"), message);
-//    }
+    /**
+     * 重新抛出filter发生的异常
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("rethrow")
     public ResponseData forbid(HttpServletRequest request) throws Exception {
         ResponseData responseData = (ResponseData) request.getAttribute(SecurityConsts.FILTER_EXCEPTION);
-
         throw (Exception) responseData.getData();
     }
 }

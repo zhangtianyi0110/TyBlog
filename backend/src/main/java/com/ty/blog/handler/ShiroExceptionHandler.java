@@ -35,7 +35,7 @@ public class ShiroExceptionHandler {
                        HttpServletResponse response, Exception e) throws IOException {
 
         //系统异常打印
-        log.error("error:", e);
+        log.error("认证失败：", e);
         if(e instanceof UnknownAccountException){
             return ResponseUtil.failure(401,"用户名不存在");
         }else if(e instanceof IncorrectCredentialsException){
@@ -51,7 +51,7 @@ public class ShiroExceptionHandler {
     public ResponseData handleAuthorizationException(HttpServletRequest request,
                        HttpServletResponse response, Exception e) throws IOException {
         //系统异常打印
-        log.error("error:", e);
+        log.error("权限不足：", e);
         return ResponseUtil.failure(403,"权限不足！");
     }
 
@@ -63,7 +63,7 @@ public class ShiroExceptionHandler {
                        HttpServletResponse response, Exception e) throws IOException {
 
         //系统异常打印
-        log.error("error:", e);
+        log.error("token认证失败：", e);
         return ResponseUtil.failure(401, "token令牌非法或过期,请重新登录！");
     }
 

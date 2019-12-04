@@ -7,6 +7,7 @@ import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.entity.ResponseData;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
 
 /**
  *  @ClassName: JwtFilter
@@ -43,8 +43,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         this.jwtConfig = jwtConfig;
     }
 
+    /**
+     * 判断用户是否要登入，无状态的jwt都是需要登入的
+     * 游客除外
+     */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response,
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response,
               Object mappedValue) throws UnauthorizedException {
 
         //判断请求的请求头是否带上 "Token"
@@ -54,40 +58,40 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 this.executeLogin(request, response);
             } catch (Exception e) {
                 String msg = e.getMessage();
-                if(e != null && e instanceof SignatureVerificationException){
-                    msg = "Token或者密钥不正确";
-                } else if (e != null && e instanceof TokenExpiredException) {
+                Throwable throwable = e.getCause();
+                if (throwable != null && throwable instanceof SignatureVerificationException) {
+                    msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
+                } else if (throwable != null && throwable instanceof TokenExpiredException) {
                     // AccessToken已过期,但在刷新期内，刷新token
                     if (this.refreshToken(request, response)) {
                         return true;
                     } else {
-                        msg = "Token已过期";
+                        msg = "Token已过期(" + throwable.getMessage() + ")";
                     }
                 } else {
-                    if (e != null) {
-                        msg = e.getMessage();
+                    if (throwable != null) {
+                        msg = throwable.getMessage();
                     }
                 }
-//                Throwable throwable = e.getCause();
-//                if (throwable != null && throwable instanceof SignatureVerificationException) {
-//                    msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
-//                } else if (throwable != null && throwable instanceof TokenExpiredException) {
-//                    // AccessToken已过期,但在刷新期内，刷新token
-//                    if (this.refreshToken(request, response)) {
-//                        return true;
-//                    } else {
-//                        msg = "Token已过期(" + throwable.getMessage() + ")";
-//                    }
-//                } else {
-//                    if (throwable != null) {
-//                        msg = throwable.getMessage();
-//                    }
-//                }
+
+                //if(e != null && e instanceof SignatureVerificationException){
+                //    msg = "Token或者密钥不正确";
+                //} else if (e != null && e instanceof TokenExpiredException) {
+                //    // AccessToken已过期,但在刷新期内，刷新token
+                //    if (this.refreshToken(request, response)) {
+                //        return true;
+                //    } else {
+                //        msg = "Token已过期";
+                //    }
+                //} else {
+                //    if (e != null) {
+                //        msg = e.getMessage();
+                //    }
+                //}
                 //token 错误
                 log.error("认证不通过，请重新登录！" + msg);
                 this.requestError(request, response,
                         ResponseData.builder().code(401).message(msg).data(e).build());
-//                this.response401(request,response,msg);
                 return false;
             }
         }
@@ -99,9 +103,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 检测 header 里面是否包含 token 字段
      */
     @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
+    protected boolean isLoginAttempt(ServletRequest servletRequest, ServletResponse servletResponse) {
+        String token = this.getAuthzHeader(servletRequest);
         return token != null;
     }
 
@@ -109,13 +112,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 执行登录操作
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean executeLogin(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
+        String token = this.getAuthzHeader(servletRequest);
         JwtToken jwtToken = new JwtToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
-        getSubject(request, response).login(jwtToken);
+        getSubject(servletRequest, servletResponse).login(jwtToken);
         // 如果没有抛出异常则代表登入成功，返回true
         return true;
 
@@ -139,12 +141,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 
             if (tokenMillis.equals(currentTimeMillisRedis)) {
 
-                // 设置RefreshToken中的时间戳为当前最新时间戳,并重制ip缓存时间
+                // 设置RefreshToken中的时间戳为当前最新时间戳,并重置ip缓存时间
                 String currentTimeMillis = String.valueOf(System.currentTimeMillis());
                 jwtRedisCache.put(refreshTokenCacheKey, currentTimeMillis, jwtConfig.getRefreshTokenExpireTime());
                 jwtRedisCache.put(SecurityConsts.IP_TOKEN+username, JwtUtil.getIpAddress((HttpServletRequest) request), jwtConfig.getRefreshTokenExpireTime());
                 // 刷新AccessToken，为当前最新时间戳
                 token = JwtUtil.sign(username, currentTimeMillis);
+                jwtRedisCache.put(SecurityConsts.USERNAME_TOKEN + username, token, jwtConfig.getTokenExpireTime());
 
                 // 使用AccessToken 再次提交给ShiroRealm进行认证，如果没有抛出异常则登入成功，返回true
                 JwtToken jwtToken = new JwtToken(token);
@@ -158,6 +161,24 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             }
         }
         return false;
+    }
+
+    /**
+     * 将非法请求转发到 /error/rethrow
+     * 统一处理
+     */
+    private void requestError(ServletRequest servletRequest, ServletResponse servletResponse,
+                              ResponseData responseData) {
+        try {
+            HttpServletRequest request = WebUtils.toHttp(servletRequest);
+            HttpServletResponse response = WebUtils.toHttp(servletResponse);
+            request.setAttribute(SecurityConsts.FILTER_EXCEPTION, responseData);
+            //转发到ErrorController
+            request.getRequestDispatcher("/error/rethrow")
+                    .forward(request, response);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
@@ -199,34 +220,5 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         }
     }
 
-    /**
-     * 将非法请求跳转到 /unauthorized/**
-     */
-    private void responseError(ServletResponse response, String message) {
-        try {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            //设置编码，否则中文字符在重定向时会变为空字符串
-            message = URLEncoder.encode(message, "UTF-8");
-            httpServletResponse.sendRedirect("/unauthorized/" + message);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
 
-    /**
-     * 将非法请求转发到 /unauthorized/**
-     */
-    private void requestError(ServletRequest servletRequest, ServletResponse servletResponse,
-                              ResponseData responseData) {
-        try {
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
-            request.setAttribute(SecurityConsts.FILTER_EXCEPTION, responseData);
-            //转发到ErrorController
-            request.getRequestDispatcher("/error/rethrow")
-                    .forward(request, response);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
 }
