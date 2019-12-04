@@ -1,5 +1,6 @@
 package com.ty.blog.handler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authc.AuthenticationException;
@@ -31,10 +32,10 @@ public class ShiroExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseData handleAuthenticationException(HttpServletRequest request,
-                                                      HttpServletResponse response, Exception e) throws IOException {
+                       HttpServletResponse response, Exception e) throws IOException {
 
         //系统异常打印
-        log.error(e.getMessage());
+        log.error("error:", e);
         if(e instanceof UnknownAccountException){
             return ResponseUtil.failure(401,"用户名不存在");
         }else if(e instanceof IncorrectCredentialsException){
@@ -48,10 +49,22 @@ public class ShiroExceptionHandler {
      */
     @ExceptionHandler(AuthorizationException.class)
     public ResponseData handleAuthorizationException(HttpServletRequest request,
-                                               HttpServletResponse response, Exception e) throws IOException {
+                       HttpServletResponse response, Exception e) throws IOException {
         //系统异常打印
-        log.error(e.getMessage());
+        log.error("error:", e);
         return ResponseUtil.failure(403,"权限不足！");
+    }
+
+    /**
+     * 对jwt验证异常处理
+     */
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseData handleJWTVerificationExceptionException(HttpServletRequest request,
+                       HttpServletResponse response, Exception e) throws IOException {
+
+        //系统异常打印
+        log.error("error:", e);
+        return ResponseUtil.failure(401, "token令牌非法或过期,请重新登录！");
     }
 
 }

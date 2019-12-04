@@ -53,16 +53,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             try {
                 this.executeLogin(request, response);
             } catch (Exception e) {
-                Integer code = 401;
                 String msg = e.getMessage();
                 if(e != null && e instanceof SignatureVerificationException){
-                    msg = "Token或者密钥不正确(" + e.getMessage() + ")";
+                    msg = "Token或者密钥不正确";
                 } else if (e != null && e instanceof TokenExpiredException) {
                     // AccessToken已过期,但在刷新期内，刷新token
                     if (this.refreshToken(request, response)) {
                         return true;
                     } else {
-                        msg = "Token已过期(" + e.getMessage() + ")";
+                        msg = "Token已过期";
                     }
                 } else {
                     if (e != null) {
@@ -85,9 +84,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 //                    }
 //                }
                 //token 错误
-                log.error("认证不通过，请重新登录！", e);
+                log.error("认证不通过，请重新登录！" + msg);
                 this.requestError(request, response,
-                        ResponseData.builder().code(code).message(msg).data(e).build());
+                        ResponseData.builder().code(401).message(msg).data(e).build());
 //                this.response401(request,response,msg);
                 return false;
             }
@@ -224,7 +223,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             request.setAttribute(SecurityConsts.FILTER_EXCEPTION, responseData);
             //转发到ErrorController
-            request.getRequestDispatcher("/unauthorized/" + responseData.getMessage())
+            request.getRequestDispatcher("/error/rethrow")
                     .forward(request, response);
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -1,10 +1,12 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
+import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.entity.ResponseData;
-import com.ty.blog.util.ResponseUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *  @ClassName: ErrorController
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  *  @author zty
  *  @Date 2019/12/2 17:50
  */
-@RestController("unauthorized")
+@RestController
+@RequestMapping("error")
 public class ErrorController extends BaseController {
 
 //    @GetMapping("{message}")
@@ -20,9 +23,9 @@ public class ErrorController extends BaseController {
 //        return ResponseUtil.failure((int)request.getAttribute("code"), message);
 //    }
     @RequestMapping("rethrow")
-    public ResponseData forbid() {
-        String message = (String) request.getAttribute("message");
+    public ResponseData forbid(HttpServletRequest request) throws Exception {
+        ResponseData responseData = (ResponseData) request.getAttribute(SecurityConsts.FILTER_EXCEPTION);
 
-        return ResponseUtil.failure((int)request.getAttribute("code"), message);
+        throw (Exception) responseData.getData();
     }
 }

@@ -7,6 +7,7 @@ import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtToken;
 import com.ty.blog.shiro.jwt.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -59,40 +60,37 @@ public class ShiroRealm extends AuthorizingRealm {
         String token = (String) authenticationToken.getCredentials();
         // 1.从token中获取用户名，因为用户名不是私密直接获取
         String username = JwtUtil.getUsername(token);
-        // 2.从request中取
-        User user = (User) request.getAttribute(username);
-        if(user == null ){
-            user = userService.findByUsername(username);
-        }
-
-        // 3.request没有通过用户名到数据库中获取角色权限数据
-       // User user = userService.findByUsername(username);
-        if(user == null ){
-            throw new AuthenticationException("用户名或密码错误");
+        // 2.从redis中取token
+        String redisToken = (String) jwtRedisCache.get(SecurityConsts.USERNAME_TOKEN + username);
+        if(StringUtils.isEmpty(redisToken)){
+            if(userService.findByUsername(username) == null){
+                //3.redis没有通过用户名到数据库中获取
+                throw new AuthenticationException("非法token");
+            }
+        } else if(!redisToken.equals(token)){
+            throw new AuthenticationException("非法token");
         }
 
         //获取ip与redis中ip对比
-        String ipRedis = (String) jwtRedisCache.get(SecurityConsts.IP_TOKEN + username);
-//        if(ipRedis == null){
-//            throw new AuthenticationException("ip已过期，请重新登录！");
-//        } else if(!JwtUtil.getIpAddress(request).equals(ipRedis)){
-//            throw new AuthenticationException("不是正常ip，token可能被盗用");
-//        }
-        if(!JwtUtil.getIpAddress(request).equals(ipRedis)){
+        String redisIp = (String) jwtRedisCache.get(SecurityConsts.IP_TOKEN + username);
+        if(redisIp == null){
+            throw new AuthenticationException("ip已过期，请重新登录！");
+        } else if(!JwtUtil.getIpAddress(request).equals(redisIp)){
             throw new AuthenticationException("不是正常ip，token可能被盗用");
         }
 
+        // 验证token异常抛出
         String refreshTokenCacheKey = SecurityConsts.REFRESH_TOKEN + username;
         if (JwtUtil.verify(token) && jwtRedisCache.get(refreshTokenCacheKey)!=null) {
-            String currentTimeMillisRedis = (String) jwtRedisCache.get(refreshTokenCacheKey);
+            String redisCurrentTimeMillis = (String) jwtRedisCache.get(refreshTokenCacheKey);
             // 获取AccessToken时间戳，与RefreshToken的时间戳对比
-            if (JwtUtil.getClaim(token, SecurityConsts.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
+            if (JwtUtil.getClaim(token, SecurityConsts.CURRENT_TIME_MILLIS).equals(redisCurrentTimeMillis)) {
                 log.info("-----doGetAuthenticationInfo 结束-----");
                 return new SimpleAuthenticationInfo(token, token, getName());
             }
         }
 
-        throw new TokenExpiredException("Token expired or incorrect.");
+        throw new TokenExpiredException("Token过期");
     }
 
     /**

@@ -83,13 +83,14 @@ public class JwtUtil {
      */
     public static String sign(String username,  String currentTimeMillis) {
         //过期时间毫秒
-        Date date = new Date(System.currentTimeMillis() + staticJwtConfig.getTokenExpireTime()*60*1000);
+        Date date = new Date(Long.parseLong(currentTimeMillis) + staticJwtConfig.getTokenExpireTime()*60*1000);
         Algorithm algorithm = Algorithm.HMAC256(staticJwtConfig.getSecretKey());
         //创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
         return JWT.create()
                 .withClaim(SecurityConsts.USERNAME, username)
                 .withClaim(SecurityConsts.CURRENT_TIME_MILLIS, currentTimeMillis)
-                .withExpiresAt(date)//过期时间
+                //过期时间
+                .withExpiresAt(date)
                 .sign(algorithm);
     }
 

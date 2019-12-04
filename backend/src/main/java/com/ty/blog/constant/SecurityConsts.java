@@ -35,6 +35,11 @@ public class SecurityConsts {
     public final static String IP_TOKEN = "ip_token:";
 
     /**
+     * username_token 记录对应的username的token
+     */
+    public final static String USERNAME_TOKEN = "username_token:";
+
+    /**
      * JWT-currentTimeMillis
      */
     public final static String CURRENT_TIME_MILLIS = "currentTimeMillis";

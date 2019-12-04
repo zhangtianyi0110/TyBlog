@@ -78,6 +78,8 @@ public class LoginController extends BaseController {
         String currentTimeMillis = String.valueOf(System.currentTimeMillis());
         //生成签名
         String jwt = JwtUtil.sign(user.getUsername(), currentTimeMillis);
+        //将token存入redis
+        jwtRedisCache.put(SecurityConsts.USERNAME_TOKEN + username, jwt, jwtConfig.getRefreshTokenExpireTime());
         //将时间戳存入缓存
         jwtRedisCache.put(SecurityConsts.REFRESH_TOKEN + username, currentTimeMillis, jwtConfig.getRefreshTokenExpireTime());
         //将ip存入，防止其他用户使用token侵入
