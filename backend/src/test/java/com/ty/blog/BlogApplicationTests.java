@@ -96,13 +96,13 @@ public class BlogApplicationTests {
         perm = Perm.builder()
                 .createTime(new Date())
                 .modifyTime(new Date())
-                .perm("article:*")
+                .permName("article:*")
                 .permDesc("文章类增删改查").build();
         //额外权限
         extraPerm = Perm.builder()
                 .createTime(new Date())
                 .modifyTime(new Date())
-                .perm("user:get")
+                .permName("user:get")
                 .permDesc("用户类获取信息").build();
         //维护关系
         user.getRoles().add(role);

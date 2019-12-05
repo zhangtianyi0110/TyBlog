@@ -69,4 +69,10 @@ public class TableNameConsts {
      */
     public static final String TY_USER_PERM = "ty_user_perm";
 
+    /**
+     * 文章标签关系表
+     */
+    public static final String TY_ARTICLE_TAG = "ty_article_tag";
+
+
 }

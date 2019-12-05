@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface PermDao extends JpaRepository<Perm, Integer> {
+public interface PermDao extends JpaRepository<Perm, Long> {
 
 
 }

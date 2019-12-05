@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface CategoryDao extends JpaRepository<Category, Integer> {
+public interface CategoryDao extends JpaRepository<Category, Long> {
 
     /**
      * 根据分类名字获取分类对象

@@ -30,7 +30,7 @@ public class CategoryService extends BaseService {
 
         List<Article> articles = articleDao.findAllByAuthor(username);
         List<String> articleIds = articles.stream()
-                .map(article -> String.valueOf(article.getId()))
+                .map(article -> String.valueOf(article.getArticleId()))
                 .collect(Collectors.toList());
         List<Relation> relations = relationDao
                 .findAllByRelationTypeAndCode1In(RelationTypeConsts.ARTICLE_CATEGORY, articleIds);

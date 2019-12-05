@@ -14,7 +14,7 @@ import java.util.List;
  *
  */
 @Repository
-public interface ArticleDao extends JpaRepository<Article, Integer> {
+public interface ArticleDao extends JpaRepository<Article, Long> {
 
     /**
      * 通过用户名查询用户对象

@@ -35,7 +35,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer id;
+    private Long userId;
 
     /**
      * 用户名
@@ -157,6 +157,22 @@ public class User implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "perm_id", referencedColumnName = "perm_id")})
     private Set<Perm> perms = new HashSet<>();
+
+    /**
+     * 用户所有文章
+     */
+    @ApiModelProperty("用户名下所有的文章")
+    @Builder.Default
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private Set<Article> articles = new HashSet<>();
+
+    /**
+     * 用户名下所有的评论，删除用户保留评论
+     */
+    @ApiModelProperty("用户名下所有的评论")
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private Set<Comment> comments = new HashSet<>();
 
     /**
      * 最后一次登录时间

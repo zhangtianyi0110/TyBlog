@@ -1,22 +1,29 @@
 package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: Category
@@ -25,7 +32,9 @@ import java.util.Date;
  * @date 2019/9/17 16:56
  *
  */
-@Data
+@ApiModel("分类实体对象")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,7 +47,8 @@ public class Category implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     /**
      * 分类名
@@ -52,6 +62,14 @@ public class Category implements Serializable {
     @Lob
     @Column(name = "category_desc", columnDefinition = "TEXT")
     private String categoryDesc;
+
+    /**
+     * 分类与文章关系，一对多关系，文章维护关系
+     */
+    @ApiModelProperty(value = "分类与文章关系，一对多关系，文章维护关系")
+    @Builder.Default
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private Set<Article> articles = new HashSet<>();
 
     /**
      * 创建时间

@@ -46,20 +46,20 @@ public class Perm implements Serializable {
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
   @Column(name = "perm_id")
-  private int id;
+  private Long permId;
 
   /**
    * 权限名
    */
   @ApiModelProperty(value = "权限名", required = true)
-  @Column(name = "perm", unique = true, nullable = false)
-  private String perm;
+  @Column(unique = true, nullable = false)
+  private String permName;
 
   /**
    * 权限描述
    */
   @ApiModelProperty("权限描述")
-  @Column(name = "perm_desc", unique = true, nullable = false)
+  @Column(unique = true, nullable = false)
   private String permDesc;
 
   /**

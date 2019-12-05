@@ -7,8 +7,10 @@ import com.ty.blog.util.GsonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: UserService
@@ -31,22 +33,37 @@ public class UserService extends BaseService {
 
     /**
      * 根据用户名获取用户对应角色
-     * @param username 用户名
+     * @param user 用户对象
      * @return
      */
-    public Set<String> getRolesByUsername(String username){
+    public Set<String> getRolesByUsername(User user){
 
-        return userDao.findRolesByUsername(username);
+        Set<String> roles = user.getRoles().stream()
+                .map(role -> role.getRoleName()).collect(Collectors.toSet());
+
+        return roles;
     }
 
     /**
      * 根据用户名获取用户对应的所有权限
-     * @param username
+     * @param user 用户对象
      * @return
      */
-    public Set<String> getPermByUsername(String username){
+    public Set<String> getPermsByUsername(User user){
 
-        return userDao.findPermsByUsername(username);
+        Set<String> perms = new HashSet<>();
+        user.getRoles().forEach(role -> {
+            perms.addAll(role.getPerms()
+                    .stream()
+                    .map(perm -> perm.getPermName())
+                    .collect(Collectors.toSet()));
+        });
+        perms.addAll(user.getPerms()
+                .stream()
+                .map(perm -> perm.getPermName())
+                .collect(Collectors.toSet()));
+
+        return perms;
     }
 
     /**
@@ -59,8 +76,8 @@ public class UserService extends BaseService {
         String username = JwtUtil.getUsername(token);
         Map<String, Object> info = new HashMap<>();
         User user = findByUsername(username);
-        Set<String> roles = getRolesByUsername(username);
-        Set<String> perms = getPermByUsername(username);
+        Set<String> roles = getRolesByUsername(user);
+        Set<String> perms = getPermsByUsername(user);
         info.put("user", user);
         info.put("roles", roles);
         info.put("perms", perms);

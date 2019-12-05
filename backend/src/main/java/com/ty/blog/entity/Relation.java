@@ -27,7 +27,7 @@ public class Relation implements Serializable {
 
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   /**
    * 关系类型，格式：（表名_表名）

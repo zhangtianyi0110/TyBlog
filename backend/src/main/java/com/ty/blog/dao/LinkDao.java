@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface LinkDao extends JpaRepository<Link, Integer> {
+public interface LinkDao extends JpaRepository<Link, Long> {
 
 
 

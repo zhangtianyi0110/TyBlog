@@ -32,7 +32,6 @@ import java.util.Set;
  */
 public class ShiroRealm extends AuthorizingRealm {
 
-
     private Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private HttpServletRequest request;
@@ -103,9 +102,9 @@ public class ShiroRealm extends AuthorizingRealm {
         //1.从主体传过来的认证信息中，获取用户对象
         String token = (String)principalCollection.getPrimaryPrincipal();
         User user = userService.findByUsername(JwtUtil.getUsername(token));
-        //通过用户名到数据库获取角色和权限
-        Set<String> roles = userService.getRolesByUsername(user.getUsername());
-        Set<String> perms = userService.getPermByUsername(user.getUsername());
+        //通过用户名到数据库获取角色和权限(通过user对象导航查询)
+        Set<String> roles = userService.getRolesByUsername(user);
+        Set<String> perms = userService.getPermsByUsername(user);
         //构造对象返回加上角色权限
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         //角色

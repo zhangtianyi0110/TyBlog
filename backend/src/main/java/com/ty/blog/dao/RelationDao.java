@@ -14,7 +14,7 @@ import java.util.List;
  *
  */
 @Repository
-public interface RelationDao extends JpaRepository<Relation, Integer> {
+public interface RelationDao extends JpaRepository<Relation, Long> {
 
     /**
      * 通过关系类型type和关系码值1查询结果集

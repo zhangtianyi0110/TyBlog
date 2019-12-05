@@ -1,12 +1,23 @@
 package com.ty.blog.entity;
 
 import com.ty.blog.constant.TableNameConsts;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,7 +28,9 @@ import java.util.Date;
  * @date 2019/9/17 10:24
  *
  */
-@Data
+@ApiModel("友情链接实体对象")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,11 +43,13 @@ public class Link implements Serializable {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "link_id")
+    private Long linkId;
 
     /**
      * 链接标题
      */
+    @ApiModelProperty(value = "链接标题")
     @Column(name = "link_title", unique = true, nullable = false)
     private String linkTitle;
 
