@@ -3,7 +3,7 @@ package com.ty.blog.service;
 import com.ty.blog.base.BaseService;
 import com.ty.blog.entity.User;
 import com.ty.blog.shiro.jwt.JwtUtil;
-import com.ty.blog.util.GsonUtil;
+import com.ty.blog.util.JacksonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -81,7 +81,7 @@ public class UserService extends BaseService {
         info.put("user", user);
         info.put("roles", roles);
         info.put("perms", perms);
-        log.info("用户信息:" + GsonUtil.formatDate("yyyy年MM月dd日 HH:mm:ss").toJson(info));
+        log.info("用户信息:" + JacksonUtil.formatDate(info, "yyyy年MM月dd日 HH:mm:ss"));
         return info;
     }
 

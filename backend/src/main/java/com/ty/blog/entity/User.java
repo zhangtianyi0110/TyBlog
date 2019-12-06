@@ -1,12 +1,32 @@
 package com.ty.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -41,6 +61,7 @@ public class User implements Serializable {
      * 用户名
      */
     @ApiModelProperty(value = "用户名", required = true)
+    @NotBlank(message = "用户名不能为空")
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -48,6 +69,8 @@ public class User implements Serializable {
      * 密码
      */
     @ApiModelProperty(value = "密码,长度大于6", required = true, allowableValues = "123456")
+    @NotBlank(message = "密码不能为空")
+    @Min(value = 6, message = "密码不能少于6位")
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -136,6 +159,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("用户角色集合")
     @Builder.Default
+    @JsonIgnore
     @ManyToMany(targetEntity = Role.class)
     @JoinTable(name = TableNameConsts.TY_USER_ROLE,
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
@@ -152,6 +176,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("用户除角色拥有的权限之外的权限集合")
     @Builder.Default
+    @JsonIgnore
     @ManyToMany(targetEntity = Perm.class)
     @JoinTable(name = TableNameConsts.TY_USER_PERM,
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
@@ -163,6 +188,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("用户名下所有的文章")
     @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<Article> articles = new HashSet<>();
 
@@ -171,6 +197,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("用户名下所有的评论")
     @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Comment> comments = new HashSet<>();
 

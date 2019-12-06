@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,6 +69,7 @@ public class Category implements Serializable {
      */
     @ApiModelProperty(value = "分类与文章关系，一对多关系，文章维护关系")
     @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<Article> articles = new HashSet<>();
 

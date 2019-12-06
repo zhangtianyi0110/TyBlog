@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -76,6 +77,7 @@ public class Comment implements Serializable {
      * 父评论
      */
     @ApiModelProperty(value = "父评论")
+    @JsonIgnore
     @OneToOne(targetEntity = Comment.class)
     @JoinColumn(name = "comment_parent_id", referencedColumnName = "comment_id")
     private Comment commentParent;

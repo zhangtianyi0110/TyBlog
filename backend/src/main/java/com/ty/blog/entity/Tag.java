@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -69,6 +70,7 @@ public class Tag implements Serializable {
      */
     @ApiModelProperty(value = "文章，多对多")
     @Builder.Default
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     private Set<Article> articles = new HashSet<>();
 

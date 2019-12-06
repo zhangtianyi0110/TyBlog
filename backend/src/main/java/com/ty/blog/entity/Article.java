@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -88,6 +89,7 @@ public class Article implements Serializable {
      */
     @ApiModelProperty(value = "文章标签外键，多对多关系")
     @Builder.Default
+    @JsonIgnore
     @ManyToMany(targetEntity = Tag.class)
     @JoinTable(name = TableNameConsts.TY_ARTICLE_TAG,
             joinColumns = {@JoinColumn(name = "article_id", referencedColumnName = "article_id")},
@@ -114,6 +116,7 @@ public class Article implements Serializable {
      */
     @ApiModelProperty(value = "文章评论外键，一对多")
     @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 

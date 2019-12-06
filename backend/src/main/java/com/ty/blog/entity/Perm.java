@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,6 +69,7 @@ public class Perm implements Serializable {
    */
   @ApiModelProperty("维护权限与角色关系")
   @Builder.Default
+  @JsonIgnore
   @ManyToMany(mappedBy = "perms")
   private Set<Role> roles = new HashSet<>();
 
@@ -77,6 +79,7 @@ public class Perm implements Serializable {
    */
   @ApiModelProperty("维护权限与用户关系")
   @Builder.Default
+  @JsonIgnore
   @ManyToMany(mappedBy = "perms")
   private Set<User> users = new HashSet<>();
 

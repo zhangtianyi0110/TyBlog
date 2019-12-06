@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -70,6 +71,7 @@ public class Role implements Serializable {
    */
   @ApiModelProperty(value = "维护用户与角色关系")
   @Builder.Default
+  @JsonIgnore
   @ManyToMany(mappedBy = "roles")
   private Set<User> users = new HashSet<>();
 
@@ -79,6 +81,7 @@ public class Role implements Serializable {
    */
   @ApiModelProperty(value = "维护角色和权限关系")
   @Builder.Default
+  @JsonIgnore
   @ManyToMany(targetEntity = Perm.class)
   @JoinTable(name = TableNameConsts.TY_ROLE_PERM,
           joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")},
