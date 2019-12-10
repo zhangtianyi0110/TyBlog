@@ -5,6 +5,7 @@ import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -33,9 +34,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseData validationBodyException(ConstraintViolationException e) {
 
-        return ResponseUtil.failure(400, e.getMessage());
+        return ResponseUtil.failure(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
+    /**
+     * 校验错误拦截处理
+     * @param e
+     * @return 错误信息
+     */
     @ExceptionHandler(BindException.class)
     public ResponseData validationBodyException(BindException e) {
         List<ObjectError> allErrors = e.getAllErrors();
@@ -43,7 +49,7 @@ public class GlobalExceptionHandler {
         allErrors.forEach(error -> {
             msgs.add("错误：" + error.getDefaultMessage());
         });
-        return ResponseUtil.failure(400, new Gson().toJson(msgs));
+        return ResponseUtil.failure(HttpStatus.BAD_REQUEST.value(), new Gson().toJson(msgs));
     }
 
 
@@ -71,7 +77,7 @@ public class GlobalExceptionHandler {
             });
 
         }
-        return ResponseUtil.failure(400,"请填写正确信息");
+        return ResponseUtil.failure(HttpStatus.BAD_REQUEST.value(),"请填写正确信息");
     }
 
     /**
@@ -84,7 +90,7 @@ public class GlobalExceptionHandler {
     public ResponseData parameterTypeException(HttpMessageConversionException exception){
 
         log.error(exception.getCause().getLocalizedMessage());
-        return ResponseUtil.failure(400, "类型转换错误");
+        return ResponseUtil.failure(HttpStatus.BAD_REQUEST.value(), "类型转换错误");
 
     }
 

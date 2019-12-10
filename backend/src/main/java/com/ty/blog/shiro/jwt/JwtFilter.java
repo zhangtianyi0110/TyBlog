@@ -2,7 +2,6 @@ package com.ty.blog.shiro.jwt;
 
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.entity.ResponseData;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -18,8 +17,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  *  @ClassName: JwtFilter
@@ -73,25 +70,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                         msg = throwable.getMessage();
                     }
                 }
-
-                //if(e != null && e instanceof SignatureVerificationException){
-                //    msg = "Token或者密钥不正确";
-                //} else if (e != null && e instanceof TokenExpiredException) {
-                //    // AccessToken已过期,但在刷新期内，刷新token
-                //    if (this.refreshToken(request, response)) {
-                //        return true;
-                //    } else {
-                //        msg = "Token已过期";
-                //    }
-                //} else {
-                //    if (e != null) {
-                //        msg = e.getMessage();
-                //    }
-                //}
                 //token 错误
                 log.error("认证不通过，请重新登录！" + msg);
                 this.requestError(request, response,
-                        ResponseData.builder().code(401).message(msg).data(e).build());
+                        ResponseData.builder().code(HttpStatus.UNAUTHORIZED.value()).message(msg).data(e).build());
                 return false;
             }
         }
@@ -199,26 +181,25 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-    /**
-     * 401非法请求
-     * @param req
-     * @param resp
-     */
-    private void response401(ServletRequest req, ServletResponse resp,String msg) {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setContentType("application/json; charset=utf-8");
-        try (PrintWriter out =httpServletResponse.getWriter()){
-
-            ResponseData result = new ResponseData();
-            result.setCode(401);
-            result.setMessage(msg);
-            out.append(new ObjectMapper().writeValueAsString(result));
-        } catch (IOException e) {
-            log.error("返回Response信息出现IOException异常:" + e.getMessage());
-        }
-    }
-
+//    /**
+//     * 401非法请求
+//     * @param req
+//     * @param resp
+//     */
+//    private void response401(ServletRequest req, ServletResponse resp,String msg) {
+//        HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
+//        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        httpServletResponse.setCharacterEncoding("UTF-8");
+//        httpServletResponse.setContentType("application/json; charset=utf-8");
+//        try (PrintWriter out =httpServletResponse.getWriter()){
+//
+//            ResponseData result = new ResponseData();
+//            result.setCode(401);
+//            result.setMessage(msg);
+//            out.append(new ObjectMapper().writeValueAsString(result));
+//        } catch (IOException e) {
+//            log.error("返回Response信息出现IOException异常:" + e.getMessage());
+//        }
+//    }
 
 }

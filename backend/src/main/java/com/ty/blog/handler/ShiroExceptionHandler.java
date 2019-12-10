@@ -9,6 +9,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -37,12 +38,12 @@ public class ShiroExceptionHandler {
         //系统异常打印
         log.error("认证失败：", e);
         if(e instanceof UnknownAccountException){
-            return ResponseUtil.failure(401,"用户名不存在");
+            return ResponseUtil.failure(HttpStatus.UNAUTHORIZED.value(),"用户名不存在");
         }else if(e instanceof IncorrectCredentialsException){
-            return ResponseUtil.failure(401,"用户名或密码错误");
+            return ResponseUtil.failure(HttpStatus.UNAUTHORIZED.value(),"用户名或密码错误");
         }
         //异常回传信息
-        return ResponseUtil.failure(401,"认证失败！");
+        return ResponseUtil.failure(HttpStatus.UNAUTHORIZED.value(),"认证失败！");
     }
     /**
      * 对shiro授权抛出的异常统一处理
@@ -52,7 +53,7 @@ public class ShiroExceptionHandler {
                        HttpServletResponse response, Exception e) throws IOException {
         //系统异常打印
         log.error("权限不足：", e);
-        return ResponseUtil.failure(403,"权限不足！");
+        return ResponseUtil.failure(HttpStatus.FORBIDDEN.value(),"权限不足！");
     }
 
     /**
@@ -64,7 +65,7 @@ public class ShiroExceptionHandler {
 
         //系统异常打印
         log.error("token认证失败：", e);
-        return ResponseUtil.failure(401, "token令牌非法或过期,请重新登录！");
+        return ResponseUtil.failure(HttpStatus.UNAUTHORIZED.value(), "token令牌非法或过期,请重新登录！");
     }
 
 }

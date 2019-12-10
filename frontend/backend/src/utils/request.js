@@ -43,18 +43,29 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    // 如果不是200响应码，进行错误判断
+    if (res.code !== 200) {
       Message({
         message: res.message || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      // 401: 认证失败
+      if (res.code === 401) {
         // to re-login
         MessageBox.confirm('您已退出，你可以选择停在此页面，也可以重新登陆', '确认退出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+      } else if (res.code === 403) {
+        // 403: 没有权限,返回首页
+        MessageBox.confirm('权限不足，你可以选择停在此页面，也可以重新登陆', '确认退出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'

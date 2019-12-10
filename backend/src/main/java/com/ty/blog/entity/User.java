@@ -2,6 +2,7 @@ package com.ty.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -69,6 +70,7 @@ public class User implements Serializable {
      * 密码
      */
     @ApiModelProperty(value = "密码,长度大于6", required = true, allowableValues = "123456")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "密码不能为空")
     @Min(value = 6, message = "密码不能少于6位")
     @Column(name = "password", nullable = false)
@@ -144,7 +146,7 @@ public class User implements Serializable {
     /**
      * 用户是否是超级管理员
      */
-    @ApiModelProperty("github链接")
+    @ApiModelProperty("用户是否是超级管理员")
     @Builder.Default
     @Lob
     @Column(name = "is_admin")
@@ -155,7 +157,7 @@ public class User implements Serializable {
      * joinColumns指定主表的外键,
      * inverseJoinColumns指定匹配表的外键
      * 用户拥有的不同角色
-     * @Builder.Default:支持默认值设置的builder
+     * Builder.Default:支持默认值设置的builder
      */
     @ApiModelProperty("用户角色集合")
     @Builder.Default
@@ -172,7 +174,7 @@ public class User implements Serializable {
      * joinColumns指定主表的外键,
      * inverseJoinColumns指定匹配表的外键
      * 用户拥有的不同角色
-     * @Builder.Default:支持默认值设置的builder
+     * Builder.Default:支持默认值设置的builder
      */
     @ApiModelProperty("用户除角色拥有的权限之外的权限集合")
     @Builder.Default
@@ -205,7 +207,7 @@ public class User implements Serializable {
      * 最后一次登录时间
      */
     @ApiModelProperty("最后一次登录时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_time")
     private Date lastLoginTime;
@@ -213,7 +215,7 @@ public class User implements Serializable {
     /**
      * 创建时间
      */
-    @ApiModelProperty("最后一次登录时间")
+    @ApiModelProperty("创建时间")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false)
     private Date createTime;

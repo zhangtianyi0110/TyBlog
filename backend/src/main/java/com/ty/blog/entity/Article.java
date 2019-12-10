@@ -1,5 +1,6 @@
 package com.ty.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.blog.constant.TableNameConsts;
 import io.swagger.annotations.ApiModel;
@@ -107,6 +108,7 @@ public class Article implements Serializable {
      * 文章分类,多对一
      */
     @ApiModelProperty(value = "文章分类")
+    @JsonFormat
     @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
     private Category category;

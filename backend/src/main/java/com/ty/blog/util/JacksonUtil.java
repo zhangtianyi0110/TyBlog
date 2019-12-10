@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * @ClassName: JacksonUtil
- * @Description: Gson工具类
+ * @Description: Jackson工具类
  * @author zhangtainyi
  * @date 2019/11/20 16:44
  *
@@ -16,6 +16,12 @@ import java.text.SimpleDateFormat;
 public class JacksonUtil {
     private static ObjectMapper jsonMapper = new JsonMapper();
 
+    /**
+     * 将bean转化为json，并且时间转化为指定格式
+     * @param object
+     * @param pattern
+     * @return
+     */
     public static String formatDate(Object object, String pattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String json = null;

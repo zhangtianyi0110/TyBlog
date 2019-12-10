@@ -14,8 +14,10 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following methods:
-// port = 9528 npm run dev OR npm run dev --port = 9528
-const port = process.env.port || process.env.npm_config_port || 9528 // dev port
+// port = 4000 npm run dev OR npm run dev --port = 4000
+const port = process.env.port || process.env.npm_config_port || 4000 // dev port
+
+const backPort = process.env.NODE_ENV === 'production' ? 8000 : process.env.NODE_ENV === 'test' ? 8001 : 8002
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -49,11 +51,11 @@ module.exports = {
       //   }
       // },
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://127.0.0.1:8080/api`,
+        target: `http://127.0.0.1:${backPort}`,
         changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
+        // pathRewrite: {
+        //   ['^' + process.env.VUE_APP_BASE_API]: ''
+        // }
       }
     },
     // after: require('./mock/mock-server.js')

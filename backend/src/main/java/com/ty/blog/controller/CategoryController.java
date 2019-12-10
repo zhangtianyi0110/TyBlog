@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName: CategoryController
@@ -25,13 +25,13 @@ public class CategoryController extends BaseController {
 
     /**
      * 获取某个用户的所有分类
-     * @param username
+     * @param userId
      * @return
      */
-    @GetMapping("{username}")
+    @GetMapping("{userId}")
     @RequiresAuthentication
-    public ResponseData getCategories(@PathVariable("username") String username){
-        List<Category> categories = categoryService.getCategories(username);
+    public ResponseData getCategories(@PathVariable("userId") Long userId){
+        Set<Category> categories = categoryService.getCategories(userId);
         return ResponseUtil.success(categories);
     }
 

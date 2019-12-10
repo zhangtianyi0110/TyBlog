@@ -1,24 +1,15 @@
-
 server:
-  port: 8080
+  port: 8000
   servlet:
-    context-path: /
+    context-path: /prd-api
 
-
+# JPA 配置
 spring:
-  profiles:
-    active: @profileActive@
-  # JPA 配置
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: update
   # druid
   datasource:
     druid:
       # 数据库访问配置, 使用druid数据源
-      url: jdbc:mysql://127.0.0.1:3306/tyblog?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
+      url: jdbc:mysql://127.0.0.1:3306/tyblog-prd?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
       username: root
       password: root
       # 连接池配置
@@ -90,10 +81,5 @@ spring:
         # 连接池中的最小空闲连接
         minIdle: 0
 
-
-#日志
-logging:
-  config: classpath:logback-spring.xml
-  path: /data/logs/tyblog
 
 

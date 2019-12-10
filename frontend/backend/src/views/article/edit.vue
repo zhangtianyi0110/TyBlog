@@ -98,8 +98,8 @@ export default {
   methods: {
     // 获取当前用户所有的文章分类
     getCategories() {
-      const username = this.$store.state.user.user.username
-      getCategories(username).then(response => {
+      const userId = this.$store.state.user.user.userId
+      getCategories(userId).then(response => {
         const { data } = response
         this.categories = data.map(category => category.categoryName)
       })
@@ -111,31 +111,31 @@ export default {
         return
       }
       this.loading = true
-        saveArticle()
-        postRequest("/article/", {
-          id: _this.article.id,
-          title: _this.article.title,
-          mdContent: _this.article.mdContent,
-          htmlContent: _this.$refs.md.d_render,
-          cid: _this.article.cid,
-          state: state,
-          dynamicTags: _this.article.dynamicTags
-        }).then(resp=> {
-          _this.loading = false;
-          if (resp.status == 200 && resp.data.status == 'success') {
-            _this.article.id = resp.data.msg;
-            _this.$message({type: 'success', message: state == 0 ? '保存成功!' : '发布成功!'});
+      saveArticle()
+      postRequest("/article/", {
+        id: _this.article.id,
+        title: _this.article.title,
+        mdContent: _this.article.mdContent,
+        htmlContent: _this.$refs.md.d_render,
+        cid: _this.article.cid,
+        state: state,
+        dynamicTags: _this.article.dynamicTag
+      }).then(resp=> {
+        _this.loading = false;
+        if (resp.status == 200 && resp.data.status == 'success') {
+          _this.article.id = resp.data.msg;
+          _this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
 //            if (_this.from != undefined) {
-            window.bus.$emit('blogTableReload')
+          window.bus.$emit('blogTableReload')
 //            }
-            if (state == 1) {
-              _this.$router.replace({path: '/articleList'});
-            }
+          if (state == 1) {
+            _this.$router.replace({path: '/articleList'});
           }
-        }, resp=> {
-          _this.loading = false;
-          _this.$message({type: 'error', message: state == 0 ? '保存草稿失败!' : '博客发布失败!'});
-        })
+        }
+      }, resp=> {
+        _this.loading = false;
+        _this.$message({ type: 'error', message: state === 0 ? '保存草稿失败!' : '博客发布失败!' })
+      })
     },
     /**
      * 添加图片，详见https://github.com/hinesboy/mavonEditor/blob/master/doc/cn/upload-images.md

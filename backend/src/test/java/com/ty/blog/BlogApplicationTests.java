@@ -26,10 +26,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -137,6 +137,12 @@ public class BlogApplicationTests {
         permDao.save(perm);
         permDao.save(extraPerm);
 
+    }
+
+    @Test
+    public void test(){
+        Optional<User> user = userDao.findById(1L);
+        System.out.println(user.get().getName());
     }
 
     /**
@@ -255,25 +261,6 @@ public class BlogApplicationTests {
 //
 //    }
 
-    @Test
-    @Transactional(rollbackFor = {Exception.class})
-    public void test(){
-        try {
-            test1();
-            test2();
-        } catch (Exception e){
-            e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-    }
-
-    public void test1(){
-
-    }
-
-    public void test2(){
-
-    }
     @Test
     public void getPermByUsername(){
         System.out.println(maxIdUtil.getMaxId(TableNameConsts.TY_RELATION));
