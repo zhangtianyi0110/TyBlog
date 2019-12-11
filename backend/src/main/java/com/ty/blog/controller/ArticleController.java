@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,13 +66,13 @@ public class ArticleController extends BaseController {
 
     /**
      * 上传图片
-     * @param req
      * @param image
      * @return
      */
-    @PostMapping(value = "/uploadArticleImg")
-    public ResponseData uploadArticleImg(HttpServletRequest req, MultipartFile image) {
-        return articleService.uploadArticleImg(req, image);
+    @PostMapping(value = "/articleImg")
+    public ResponseData uploadArticleImg(MultipartFile image) {
+        return articleService.uploadArticleImg(request, image);
     }
+
 
 }

@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseData validationBodyException(ConstraintViolationException e) {
+    public ResponseData handleConstraintViolationException(ConstraintViolationException e) {
 
         return ResponseUtil.failure(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
      * @return 错误信息
      */
     @ExceptionHandler(BindException.class)
-    public ResponseData validationBodyException(BindException e) {
+    public ResponseData handleBindException(BindException e) {
         List<ObjectError> allErrors = e.getAllErrors();
         List<String> msgs = new ArrayList<>();
         allErrors.forEach(error -> {

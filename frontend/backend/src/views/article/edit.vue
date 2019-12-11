@@ -57,7 +57,7 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
-import { getCategories, saveArticle, uploadArticleImg } from '@/api/article'
+import { getCategories, saveArticle, uploadArticleImg, deleteArticleImg } from '@/api/article'
 import { isEmpty } from '@/utils'
 import { MessageBox, Message } from 'element-ui'
 export default {
@@ -122,7 +122,7 @@ export default {
         dynamicTags: _this.article.dynamicTag
       }).then(resp=> {
         _this.loading = false;
-        if (resp.status == 200 && resp.data.status == 'success') {
+        if (resp.code == 200 && resp.data.status == 'success') {
           _this.article.id = resp.data.msg;
           _this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
 //            if (_this.from != undefined) {
@@ -160,6 +160,7 @@ export default {
       })
     },
     imgDel(pos) {
+      console.log(pos)
 
     },
 

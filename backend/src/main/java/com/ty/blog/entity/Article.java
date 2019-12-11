@@ -14,6 +14,8 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -51,24 +53,9 @@ public class Article implements Serializable {
      */
     @ApiModelProperty(value = "主键自增,文章id", hidden = true)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
     private Long articleId;
-
-    /**
-     * 作者,多对一，设置外键
-     */
-    @ApiModelProperty(value = "作者,多对一，设置外键", required = true)
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "author_id", referencedColumnName = "user_id", nullable = false)
-    private User author;
-
-    /**
-     * 原作者
-     */
-    @ApiModelProperty(value = "原作者,多对一，设置外键")
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "original_author_id")
-    private User originalAuthor;
 
     /**
      * 文章标题
@@ -84,43 +71,6 @@ public class Article implements Serializable {
     @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
-
-    /**
-     * 文章标签,多对多关系
-     */
-    @ApiModelProperty(value = "文章标签外键，多对多关系")
-    @Builder.Default
-    @JsonIgnore
-    @ManyToMany(targetEntity = Tag.class)
-    @JoinTable(name = TableNameConsts.TY_ARTICLE_TAG,
-            joinColumns = {@JoinColumn(name = "article_id", referencedColumnName = "article_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
-    private Set<Tag> tags = new HashSet<>();
-
-    /**
-     * 文章类型
-     */
-//    @ApiModelProperty(value = "文章类型", required = true)
-//    @Column(name = "article_type", nullable = false)
-//    private String articleType;
-
-    /**
-     * 文章分类,多对一
-     */
-    @ApiModelProperty(value = "文章分类")
-    @JsonFormat
-    @ManyToOne(targetEntity = Category.class)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
-    private Category category;
-
-    /**
-     * 文章评论关系，一对多，评论维护关系
-     */
-    @ApiModelProperty(value = "文章评论外键，一对多")
-    @Builder.Default
-    @JsonIgnore
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private Set<Comment> comments = new HashSet<>();
 
     /**
      * 文章内容md格式(TEXT类型)
@@ -188,6 +138,7 @@ public class Article implements Serializable {
      * 文章是否可以评论，默认可以
      */
     @ApiModelProperty(value = "文章是否可以评论，默认可以")
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isComment = true;
 
@@ -212,6 +163,52 @@ public class Article implements Serializable {
     @ApiModelProperty(value = "文章状态,0草稿1已发布")
     @Column(nullable = false)
     private Integer state;
+
+    /**
+     * 作者,多对一，设置外键
+     */
+    @ApiModelProperty(value = "作者,多对一，设置外键", required = true)
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "author_id", referencedColumnName = "user_id")
+    private User author;
+
+    /**
+     * 原作者
+     */
+    @ApiModelProperty(value = "原作者,多对一，设置外键")
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "original_author_id")
+    private User originalAuthor;
+
+    /**
+     * 文章标签,多对多关系
+     */
+    @ApiModelProperty(value = "文章标签外键，多对多关系")
+    @Builder.Default
+    @JsonIgnore
+    @ManyToMany(targetEntity = Tag.class)
+    @JoinTable(name = TableNameConsts.TY_ARTICLE_TAG,
+            joinColumns = {@JoinColumn(name = "article_id", referencedColumnName = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
+    private Set<Tag> tags = new HashSet<>();
+
+    /**
+     * 文章分类,多对一
+     */
+    @ApiModelProperty(value = "文章分类")
+    @JsonFormat
+    @ManyToOne(targetEntity = Category.class)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private Category category;
+
+    /**
+     * 文章评论关系，一对多，评论维护关系
+     */
+    @ApiModelProperty(value = "文章评论外键，一对多")
+    @Builder.Default
+    @JsonIgnore
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
 
 
     /**

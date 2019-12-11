@@ -45,7 +45,7 @@ public class Perm implements Serializable {
    * 主键自增
    */
   @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "perm_id")
   private Long permId;
 

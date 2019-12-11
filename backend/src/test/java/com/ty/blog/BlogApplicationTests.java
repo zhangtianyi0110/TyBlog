@@ -11,8 +11,13 @@ import com.ty.blog.dao.RelationDao;
 import com.ty.blog.dao.RoleDao;
 import com.ty.blog.dao.TagDao;
 import com.ty.blog.dao.UserDao;
+import com.ty.blog.entity.Article;
+import com.ty.blog.entity.Category;
+import com.ty.blog.entity.Comment;
+import com.ty.blog.entity.Link;
 import com.ty.blog.entity.Perm;
 import com.ty.blog.entity.Role;
+import com.ty.blog.entity.Tag;
 import com.ty.blog.entity.User;
 import com.ty.blog.redis.RedisUtil;
 import com.ty.blog.service.UserService;
@@ -29,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -67,6 +71,11 @@ public class BlogApplicationTests {
     static Role role;
     static Perm perm;
     static Perm extraPerm;
+    static Category category;
+    static Article article;
+    static Tag tag;
+    static Comment comment;
+    static Link link;
 
     static {
         //用户
@@ -108,9 +117,76 @@ public class BlogApplicationTests {
         user.getRoles().add(role);
         user.getPerms().add(extraPerm);
         role.getUsers().add(user);
-        role.getPerms().add(perm);
-        perm.getRoles().add(role);
-        extraPerm.getUsers().add(user);
+//        role.getPerms().add(perm);
+//        perm.getRoles().add(role);
+//        extraPerm.getUsers().add(user);
+
+        //分类
+        category = Category.builder()
+                .categoryDesc("java是编程语言")
+                .categoryName("java")
+                .createTime(new Date())
+                .modifyTime(new Date()).build();
+
+        //标签
+        tag = Tag.builder()
+                .tagName("编程语言")
+                .tagDesc("java是最流行的")
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .build();
+
+        //评论
+        comment = Comment.builder()
+                .commentLevel(1)
+                .user(user)
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .build();
+
+        //文章
+        article =  Article.builder()
+                .articleImg("https://cn.bing.com/images/search?view=detailV2&ccid=o0Ov0qoG&id=FF52E0729CE40E754D08E887B5E5CF20E4894827&thid=OIP.o0Ov0qoGyGtwYpmSIRaO3QAAAA&mediaurl=https%3a%2f%2fst3.depositphotos.com%2f1762148%2f18651%2fi%2f450%2fdepositphotos_186510766-stock-photo-tengboche-monastery-biggest-monastery-way.jpg&exph=300&expw=450&q=tengboche%e4%bf%ae%e9%81%93%e9%99%a2&simid=607999216156739789&selectedIndex=0")
+                .articleUrl("/article/1")
+                .title("hello world")
+                .summary("hello world")
+                .mdContent("hello word")
+                .htmlContent("hello word")
+                .isComment(true)
+                .isRead(true)
+                .likes(10)
+                .publishDate(new Date())
+                .readCount(10)
+                .state(1)
+                .createTime(new Date())
+                .updateDate(new Date())
+                .modifyTime(new Date())
+                .readPassword(null)
+                .build();
+        article.setAuthor(user);
+        article.setOriginalAuthor(user);
+        article.setCategory(category);
+        article.getTags().add(tag);
+        article.getComments().add(comment);
+
+//        user.getArticles().add(article);
+        user.getComments().add(comment);
+
+//        category.getArticles().add(article);
+//
+//        tag.getArticles().add(article);
+//
+//        comment.setArticle(article);
+//        comment.setUser(user);
+
+        link = Link.builder()
+                .isTop(true)
+                .linkAddress("www.baidu.com")
+                .linkDesc("百度一下你就知道")
+                .linkTitle("百度")
+                .createTime(new Date())
+                .modifyTime(new Date())
+                .build();
 
     }
 
@@ -131,135 +207,21 @@ public class BlogApplicationTests {
     @Test
     @Transactional
     @Rollback(false)
-    public void addUserRolePermInfo(){
+    public void addTestInfo(){
+
         userDao.save(user);
         roleDao.save(role);
         permDao.save(perm);
         permDao.save(extraPerm);
 
+        articleDao.save(article);
+        categoryDao.save(category);
+        tagDao.save(tag);
+        commentDao.save(comment);
+        linkDao.save(link);
+
     }
 
-    @Test
-    public void test(){
-        Optional<User> user = userDao.findById(1L);
-        System.out.println(user.get().getName());
-    }
-
-    /**
-     * 添加测试信息
-     */
-//    @Test
-//    public void addTestInfo(){
-//        User user = User.builder()
-//                .username("tyblog")
-//                .password(Md5Util.encrypt("123456", "tyblog"))
-//                .gender("男")
-//                .name("张小生")
-//                .nickname("tyblog")
-//                .birthday(new Date())
-//                .email("123@qq.com")
-//                .profile("hello world")
-//                .avatarUrl("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1719911752,2197523375&fm=26&gp=0.jpg")
-//                .githubId("zhangtianyi0110")
-//                .githubUrl("https://github.com/zhangtianyi0110")
-//                .lastLoginTime(new Date())
-//                .createTime(new Date())
-//                .modifyTime(new Date()).build();
-//        userDao.saveAndFlush(user);
-//        //角色
-//        Role role = Role.builder()
-//                .createTime(new Date())
-//                .modifyTime(new Date())
-//                .roleName("blogger").build();
-//        roleDao.saveAndFlush(role);
-//        //权限
-//        Perm perm = Perm.builder()
-//                .createTime(new Date())
-//                .modifyTime(new Date())
-//                .perm("article:*").build();
-//        permDao.saveAndFlush(perm);
-//        //文章
-//        Article article = Article.builder()
-//                .id(maxIdUtil.getMaxId(TableNameConsts.TY_ARTICLE))
-//                .author(user.getUsername())
-//                .originalAuthor("")
-//                .title("Hello World")
-//                .summary("Hello World")
-//                .mdContent("你好世界")
-//                .htmlContent("n你好世界")
-//                .tags("hello1")
-//                .articleType("hello2")
-//                .articleCategories("java")
-//                .publishDate(new Date())
-//                .updateDate(new Date())
-//                .articleUrl("")
-//                .likes(11)
-//                .readCount(1111)
-//                .articleImg("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1719911752,2197523375&fm=26&gp=0.jpg")
-//                .isComment("0")
-//                .readPassword("")
-//                .isRead("1")
-//                .articleState("1")
-//                .createTime(new Date())
-//                .modifyTime(new Date()).build();
-//        articleDao.saveAndFlush(article);
-//        //分类
-//        List<String> categoryNames = Arrays.asList(new String[]{"category1", "category2", "category3"});
-//        categoryNames.forEach(categoryName -> {
-//            Category category = Category.builder()
-//                    .categoryName(categoryName)
-//                    .categoryDesc("编程")
-//                    .createTime(new Date())
-//                    .modifyTime(new Date()).build();
-//            categoryDao.saveAndFlush(category);
-//            Relation relation = Relation.builder().createTime(new Date()).modifyTime(new Date())
-//                    .relationType(RelationTypeConsts.ARTICLE_CATEGORY)
-//                    .code1(categoryName).code2(article.getId() + "").build();
-//            relationDao.saveAndFlush(relation);
-//        });
-//
-//        //标签
-//        List<String> tagNames = Arrays.asList(new String[]{"tag1", "tag2", "tag2"});
-//        tagNames.forEach(tagName -> {
-//            Tag tag = Tag.builder()
-//                    .tagName(tagName)
-//                    .createTime(new Date())
-//                    .modifyTime(new Date()).build();
-//            tagDao.saveAndFlush(tag);
-//            Relation relation = Relation.builder().createTime(new Date()).modifyTime(new Date())
-//                    .relationType(RelationTypeConsts.ARTICLE_CATEGORY)
-//                    .code1(tagName).code2(article.getId() + "").build();
-//            relationDao.saveAndFlush(relation);
-//        });
-//
-//        //评论
-//        Comment comment = Comment.builder()
-//                .commentNickname("tyblog")
-//                .commentNicknameUrl("")
-//                .commentNicknameUrl("")
-//                .commentParentId(1)
-//                .createTime(new Date())
-//                .modifyTime(new Date()).build();
-//        commentDao.saveAndFlush(comment);
-//        //友情链接
-//        Link link = Link.builder()
-//                .linkTitle("红杏出墙")
-//                .linkAddress("www.baidu.com")
-//                .linkDesc("红杏出墙desc")
-//                .linkOrder(5)
-//                .isTop("1")
-//                .createTime(new Date())
-//                .modifyTime(new Date()).build();
-//        linkDao.saveAndFlush(link);
-//
-//
-//        relationDao.saveAndFlush(Relation.builder().createTime(new Date()).modifyTime(new Date())
-//                .relationType(RelationTypeConsts.USER_ROLE).code1("tyblog").code2("blogger").build());
-//        relationDao.saveAndFlush(Relation.builder().createTime(new Date()).modifyTime(new Date())
-//                .relationType(RelationTypeConsts.ROLE_PERM).code1("blogger").code2("article:*").build());
-//
-//
-//    }
 
     @Test
     public void getPermByUsername(){

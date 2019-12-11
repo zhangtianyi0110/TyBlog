@@ -45,33 +45,34 @@ public class ArticleService extends BaseService {
 
     /**
      * 上传图片
-     * @param req
+     * @param request
      * @param image
      * @return
      */
-    public ResponseData uploadArticleImg(HttpServletRequest req, MultipartFile image){
+    public ResponseData uploadArticleImg(HttpServletRequest request, MultipartFile image){
         StringBuffer url = new StringBuffer();
         String filePath = "/blogimg/" + new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String imgFolderPath = req.getServletContext().getRealPath(filePath);
+        String imgFolderPath = request.getServletContext().getRealPath(filePath);
         File imgFolder = new File(imgFolderPath);
         if (!imgFolder.exists()) {
             imgFolder.mkdirs();
         }
-        url.append(req.getScheme())
+        url.append(request.getScheme())
                 .append("://")
-                .append(req.getServerName())
+                .append(request.getServerName())
                 .append(":")
-                .append(req.getServerPort())
-                .append(req.getContextPath())
+                .append(request.getServerPort())
+                .append(request.getContextPath())
                 .append(filePath);
         String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename().replaceAll(" ", "");
         try {
             IOUtils.write(image.getBytes(), new FileOutputStream(new File(imgFolder, imgName)));
             url.append("/").append(imgName);
-            return ResponseUtil.success(url.toString());
+            return ResponseUtil.success("响应成功", url.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return ResponseUtil.failure(500, "上传失败");
     }
+
 }

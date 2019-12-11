@@ -46,16 +46,23 @@ public class Comment implements Serializable {
      */
     @ApiModelProperty(value = "评论表主键", hidden = true)
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long commentId;
+
+    /**
+     * 评论等级，一级二级
+     */
+    @ApiModelProperty(value = "评论等级，一级二级")
+    @Column(nullable = false)
+    private Integer commentLevel;
 
     /**
      * 评论人
      */
     @ApiModelProperty(value = "评论与用户表外键")
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     /**
@@ -65,13 +72,6 @@ public class Comment implements Serializable {
     @ManyToOne(targetEntity = Article.class)
     @JoinColumn(name = "article_id", referencedColumnName = "article_id")
     private Article article;
-
-    /**
-     * 评论等级，一级二级
-     */
-    @ApiModelProperty(value = "评论等级，一级二级")
-    @Column(nullable = false)
-    private Integer commentLevel;
 
     /**
      * 父评论

@@ -42,7 +42,7 @@ public class Link implements Serializable {
      * 主键
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_id")
     private Long linkId;
 
@@ -56,12 +56,14 @@ public class Link implements Serializable {
     /**
      * 链接地址
      */
+    @ApiModelProperty(value = "链接地址")
     @Column(name = "link_address", unique = true, nullable = false)
     private String linkAddress;
 
     /**
      * 链接描述
      */
+    @ApiModelProperty(value = "链接描述")
     @Lob
     @Column(name = "link_desc", columnDefinition = "TEXT")
     private String linkDesc;
@@ -69,19 +71,24 @@ public class Link implements Serializable {
     /**
      * 链接序号，大的排前面，默认5
      */
+    @ApiModelProperty(value = "链接序号，大的排前面，默认5")
+    @Builder.Default
     @Column(name = "link_order", nullable = false)
     private Integer linkOrder = 5;
 
     /**
      * 是否置顶，多个置顶取链接序号大的
-     * 0否1是
+     *
      */
+    @ApiModelProperty(value = "是否置顶，多个置顶取链接序号大的")
+    @Builder.Default
     @Column(name = "is_top", nullable = false)
-    private String isTop;
+    private Boolean isTop = false;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty(value = "创建时间")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false, length = 30)
     private Date createTime;
@@ -89,6 +96,7 @@ public class Link implements Serializable {
     /**
      * 最后修改时间
      */
+    @ApiModelProperty(value = "最后修改时间")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_time", nullable = false)
     private Date modifyTime;

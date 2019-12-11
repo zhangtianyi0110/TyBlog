@@ -7,7 +7,7 @@ export function getCategories(username) {
   })
 }
 
-export function saveArticle(params) {
+export function saveArticle(data) {
   return request({
     url: '/articles',
     method: 'post',
@@ -16,10 +16,19 @@ export function saveArticle(params) {
 }
 
 export function uploadArticleImg(data) {
+  debugger
   return request({
     url: '/articles/articleImg',
     method: 'post',
     data,
     headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}
+
+export function deleteArticleImg(data) {
+  return request({
+    url: '/articles/articleImg',
+    method: 'delete',
+    data
   })
 }

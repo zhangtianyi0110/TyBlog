@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +27,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
@@ -54,7 +54,7 @@ public class User implements Serializable {
      * 主键
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
@@ -72,7 +72,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "密码,长度大于6", required = true, allowableValues = "123456")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "密码不能为空")
-    @Min(value = 6, message = "密码不能少于6位")
+    @Length(min = 6, message = "密码不能少于6位")
     @Column(name = "password", nullable = false)
     private String password;
 

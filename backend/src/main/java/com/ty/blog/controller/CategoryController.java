@@ -35,11 +35,4 @@ public class CategoryController extends BaseController {
         return ResponseUtil.success(categories);
     }
 
-//    @GetMapping("tyblog")
-//    @RequiresAuthentication
-//    public List<Category> getCategories(){
-//
-//        return categoryService.getCategories(null);
-//    }
-
 }
