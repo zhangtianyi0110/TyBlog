@@ -3,6 +3,7 @@ package com.ty.blog.service;
 import com.ty.blog.base.BaseService;
 import com.ty.blog.entity.Article;
 import com.ty.blog.entity.ResponseData;
+import com.ty.blog.util.JacksonUtil;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class ArticleService extends BaseService {
 
 
     public boolean saveArticle(Map<String, Object> map){
+        Map<String, Object> articleMap = (Map<String, Object>) map.get("article");
+        Article article = JacksonUtil.mapToBean(articleMap, Article.class);
+//        article.setSummary(HanLP.extractSummary(article.getHtmlContent(), 3));
         return true;
     }
 

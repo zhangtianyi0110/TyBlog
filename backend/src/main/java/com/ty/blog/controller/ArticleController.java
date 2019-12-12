@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,17 +42,13 @@ public class ArticleController extends BaseController {
 
     /**
      * 保存文章
-     * @param map
+     * @param map 文章要素
      * @return
      */
     @ApiOperation("发布文章/草稿")
     @PostMapping
-    public ResponseData saveArticle(@RequestBody Map<String, String> mmp){
+    public ResponseData saveArticle(@RequestBody Map<String, Object> map){
 
-//        Map<String, Object> o = new Gson().fromJson(mmp, new TypeToken<Map<String, Object>>() {
-//        }.getType());
-
-        Map<String, Object> map = new HashMap<>();
         boolean flag = articleService.saveArticle(map);
         if(flag){
             if("1".equals(map.get("articleState"))){

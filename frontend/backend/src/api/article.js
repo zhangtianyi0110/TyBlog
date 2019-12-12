@@ -8,6 +8,7 @@ export function getCategories(username) {
 }
 
 export function saveArticle(data) {
+  debugger
   return request({
     url: '/articles',
     method: 'post',

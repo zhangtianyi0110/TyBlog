@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 /**
  * @ClassName: JacksonUtil
@@ -31,5 +32,23 @@ public class JacksonUtil {
             e.printStackTrace();
         }
         return json;
+    }
+
+    /**
+     * map转bean
+     * @param map
+     * @param clazz
+     * @return
+     */
+    public static <T> T mapToBean(Map<String, Object> map, Class<T> clazz){
+        String json = null;
+        T obj = null;
+        try {
+            json =  jsonMapper.writeValueAsString(map);
+            obj = jsonMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }
