@@ -1,15 +1,19 @@
 <template>
   <div v-loading="loading" class="page-contianer">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-form ref="articleForm" :model="article" :rules="rules" label-width="100px" size="small" class="demo-ruleForm" status-icon>
-        <el-card class="box-card">
+      <el-form ref="articleForm" :model="article" :rules="rules" label-width="auto" size="small" class="demo-ruleForm" status-icon>
+        <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <el-form-item label="文章标题" prop="title">
               <el-input v-model="article.title" />
             </el-form-item>
-            <el-form-item label="文章分类" prop="category">
-              <el-select v-model="optionValue" placeholder="请选择文章分类">
-                <el-option v-for="(category, index) in categories" :key="index" @change="getCategoryId(category.categoryId)" :value="category.categoryName" />
+            <el-form-item label="文章分类" prop="categoryName">
+              <el-select v-model="article.categoryName" placeholder="请选择文章分类" @change="getCategoryId">
+                <el-option
+                  v-for="(category, index) in categories"
+                  :key="index"
+                  :value="category.categoryName"
+                />
               </el-select>
             </el-form-item>
           </div>
@@ -44,23 +48,48 @@
               />
               <el-button v-else class="button-new-tag" size="small" @click="showInput">新增Tag</el-button>
             </el-form-item>
-            <el-form-item label="是否隐藏" prop="isRead">
-              <el-switch
-                v-model="article.isRead"
-                inactive-color="#ff4949">
-              </el-switch>
-            </el-form-item>
-            <el-form-item v-if="!article.isRead" label="是否加密" prop="isReadPassword">
-              <el-switch
-                v-model="isReadPassword"
-                inactive-color="#ff4949">
-              </el-switch>
-              <div v-if="isReadPassword">
-                <el-input placeholder="请输入密码" v-model="article.readPassword">
-                  <template slot="prepend">密码</template>
-                </el-input>
+            <div class="div-footer">
+              <div>
+                <el-form-item label="是否可以评论" prop="isComment">
+                  <el-switch v-model="article.isComment" inactive-color="#ff4949" />
+                </el-form-item>
+                <el-form-item label="是否公开" prop="isRead">
+                  <el-switch v-model="article.isRead" inactive-color="#ff4949" />
+                </el-form-item>
+                <el-form-item v-if="article.isRead" label="是否加密" prop="isReadPassword">
+                  <el-switch v-model="isReadPassword" inactive-color="#ff4949" />
+                  <div v-if="isReadPassword">
+                    <el-input v-model="article.readPassword" placeholder="请输入密码">
+                      <template slot="prepend">密码</template>
+                    </el-input>
+                  </div>
+                </el-form-item>
               </div>
-            </el-form-item>
+              <div style="margin-left: 200px">
+                <el-form-item label="文章配图">
+                  <!-- <el-input v-model="article.articleImg" placeholder="请输入文章配图URL" /> -->
+                  <!-- <el-image class="article-img" :src="article.articleImg"  /> -->
+                  <el-card :body-style="{ padding: '0px' }">
+                    <img :src="article.articleImg" class="article-img">
+                    <div style="padding: 14px;">
+                      <div class="bottom clearfix">
+                        <el-button type="text" class="button" @click="dialogVisible = true">更换配图</el-button>
+                        <el-dialog title="更换配图" :visible.sync="dialogVisible">
+                          <el-tabs type="border-card">
+                            <el-tab-pane label="用户管理">默认图片</el-tab-pane>
+                            <el-tab-pane label="配置管理">自定义图片</el-tab-pane>
+                          </el-tabs>
+                          <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                          </div>
+                        </el-dialog>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-form-item>
+              </div>
+            </div>
             <el-form-item>
               <el-button type="primary" @click.native.prevent="saveArticle(0)">保存到草稿箱</el-button>
               <el-button type="primary" @click.native.prevent="saveArticle(1)">发表文章</el-button>
@@ -74,9 +103,9 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
-import { getCategories, saveArticle, uploadArticleImg, deleteArticleImg } from '@/api/article'
+import { getCategories, getArticleImg, saveArticle, uploadArticleImg } from '@/api/article'
 import { isEmpty } from '@/utils'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 export default {
   name: 'Edit',
   components: {
@@ -85,27 +114,30 @@ export default {
   data() {
     return {
       loading: false,
-      optionValue: '',
       inputVisible: false,
       inputValue: '',
+      dialogVisible: false,
       categories: [],
       isReadPassword: false,
       tags: ['标签一', '标签二', '标签三'],
       categoryId: '',
       article: {
         title: '',
+        categoryName: '',
+        articleImg: '',
         mdContent: '',
         htmlContent: '',
         state: '',
-        isRead: false,
+        isComment: true,
+        isRead: true,
         readPassword: ''
       },
       rules: {
         title: [
           { required: true, message: '请输入文章标题', trigger: 'blur' }
         ],
-        category: [
-          { required: true, message: '请选择文章类别', trigger: 'blur' }
+        categoryName: [
+          { required: true, message: '请选择文章类别', trigger: 'change' }
         ]
       }
     }
@@ -117,6 +149,7 @@ export default {
   },
   mounted() {
     this.getCategories()
+    this.getArticleImg()
   },
   methods: {
     // 获取当前用户所有的文章分类
@@ -127,29 +160,49 @@ export default {
         this.categories = data
       })
     },
+    // 获取文章随机默认配图
+    getArticleImg() {
+      getArticleImg().then(response => {
+        const { data } = response
+        this.article.articleImg = data
+      })
+    },
+    // 更换文章配图
+    updateArticleImg() {
+
+    },
     // 获取当前文章的分类id
-    getCategoryId(curCategoryId) {
-      this.categoryId = curCategoryId
+    getCategoryId() {
+      const curCategory = this.categories.filter(category => category.categoryName === this.article.categoryName)[0]
+      this.categoryId = curCategory.categoryId
     },
     // 保存文章
     saveArticle(state) {
+      this.$refs.articleForm.validate(valid => {
+        if (!valid) {
+          this.$message({ type: 'error', message: '数据不能为空!' })
+          return false
+        }
+      })
       if (!(isEmpty(this.article.mdContent))) {
         this.$message({ type: 'error', message: '数据不能为空!' })
         return
       }
       this.loading = true
+      this.article.state = state
       this.article.htmlContent = this.$refs.md.d_render
-      const data = { article: this.article, tags: this.tags, categoryId: this.article.categoryId }
+      const data = {
+        article: this.article,
+        tags: this.tags,
+        category: this.categoryId,
+        author: this.$store.state.user.user.userId
+      }
       saveArticle(data).then(response => {
         this.loading = false
         if (response.code === 200) {
-          debugger
           this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
-          // if (this.from != undefined) {
-          //   window.bus.$emit('blogTableReload')
-          // }
           if (state === 1) {
-            this.$router.replace({ path: '/articleList' })
+            this.$router.replace({ path: '/article/list' })
           }
         }
       }, response => {
@@ -206,5 +259,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped  lang="scss">
+  .box-card{
+    .clearfix{
+      display: flex;
+    }
+  }
+  .article-img {
+    width: 200px;
+    height: 100px;
+    margin: 0px;
+  }
+  .div-footer {
+    display: flex;
+  }
 </style>

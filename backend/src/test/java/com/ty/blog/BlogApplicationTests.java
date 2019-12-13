@@ -22,6 +22,7 @@ import com.ty.blog.entity.User;
 import com.ty.blog.redis.RedisUtil;
 import com.ty.blog.service.UserService;
 import com.ty.blog.shiro.jwt.JwtRedisCache;
+import com.ty.blog.util.BlogUtil;
 import com.ty.blog.util.MaxIdUtil;
 import com.ty.blog.util.Md5Util;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -147,7 +149,7 @@ public class BlogApplicationTests {
         //文章
         article =  Article.builder()
                 .articleImg("https://cn.bing.com/images/search?view=detailV2&ccid=o0Ov0qoG&id=FF52E0729CE40E754D08E887B5E5CF20E4894827&thid=OIP.o0Ov0qoGyGtwYpmSIRaO3QAAAA&mediaurl=https%3a%2f%2fst3.depositphotos.com%2f1762148%2f18651%2fi%2f450%2fdepositphotos_186510766-stock-photo-tengboche-monastery-biggest-monastery-way.jpg&exph=300&expw=450&q=tengboche%e4%bf%ae%e9%81%93%e9%99%a2&simid=607999216156739789&selectedIndex=0")
-                .articleUrl("/article/1")
+//                .articleUrl("/article/1")
                 .title("hello world")
                 .summary("hello world")
                 .mdContent("hello word")
@@ -202,9 +204,14 @@ public class BlogApplicationTests {
     }
 
     @Test
-    public void test2(){
-        String s = "<p>ssss</p>";
-        System.out.println(s.replaceAll("<.*>",s));
+    public void test2() throws IOException {
+//        File file = new File("/static/article/img");
+//        System.out.println(file.exists());
+//        Resource resource = new ClassPathResource("static/article/img/default.jpg");
+//        File sourceFile =  resource.getFile();
+
+        System.out.println(BlogUtil.getArticleImg());
+
     }
 
     public static void main(String[] args) {

@@ -7,8 +7,14 @@ export function getCategories(username) {
   })
 }
 
+export function getArticleImg() {
+  return request({
+    url: '/articles/img',
+    method: 'get'
+  })
+}
+
 export function saveArticle(data) {
-  debugger
   return request({
     url: '/articles',
     method: 'post',
@@ -17,7 +23,6 @@ export function saveArticle(data) {
 }
 
 export function uploadArticleImg(data) {
-  debugger
   return request({
     url: '/articles/articleImg',
     method: 'post',
@@ -26,10 +31,3 @@ export function uploadArticleImg(data) {
   })
 }
 
-export function deleteArticleImg(data) {
-  return request({
-    url: '/articles/articleImg',
-    method: 'delete',
-    data
-  })
-}

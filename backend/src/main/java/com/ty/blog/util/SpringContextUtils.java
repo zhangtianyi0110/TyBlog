@@ -3,7 +3,12 @@ package com.ty.blog.util;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *  @ClassName: SpringContextUtils
@@ -38,5 +43,21 @@ public class SpringContextUtils implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringContextUtils.applicationContext = applicationContext;
+    }
+
+    /**
+     * 获取resource下的文件对象
+     * @param sourcePath resource下的文件路径
+     * @return
+     */
+    public static File getResource(String sourcePath){
+        Resource resource = new ClassPathResource(sourcePath);
+        File sourceFile = null;
+        try {
+            sourceFile = resource.getFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sourceFile;
     }
 }

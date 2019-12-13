@@ -3,6 +3,7 @@ package com.ty.blog.base;
 import com.ty.blog.dao.ArticleDao;
 import com.ty.blog.dao.CategoryDao;
 import com.ty.blog.dao.RelationDao;
+import com.ty.blog.dao.TagDao;
 import com.ty.blog.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,4 +29,6 @@ public class BaseService {
     protected ArticleDao articleDao;
     @Autowired
     protected CategoryDao categoryDao;
+    @Autowired
+    protected TagDao tagDao;
 }

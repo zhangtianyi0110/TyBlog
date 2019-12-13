@@ -5,6 +5,7 @@ import com.ty.blog.entity.Article;
 import com.ty.blog.entity.Category;
 import com.ty.blog.entity.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CategoryService extends BaseService {
 
     /**

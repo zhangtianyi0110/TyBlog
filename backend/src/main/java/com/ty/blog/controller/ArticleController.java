@@ -2,6 +2,7 @@ package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
 import com.ty.blog.entity.ResponseData;
+import com.ty.blog.util.BlogUtil;
 import com.ty.blog.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +41,24 @@ public class ArticleController extends BaseController {
         return ResponseUtil.success(articleService.getArticlesByAuthor(author).size());
     }
 
+    @ApiOperation("获取指定作者的文章总数量")
+    @GetMapping("{name}")
+    @RequiresAuthentication
+    public ResponseData getArticles(@PathVariable("name") String author){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(author).size());
+    }
+
+    /**
+     * 随机获取指定文章配图
+     * @return
+     */
+    @ApiOperation("随机获取指定文章配图")
+    @GetMapping("img")
+    @RequiresAuthentication
+    public ResponseData getArticleImg(){
+        return ResponseUtil.success("响应成功", BlogUtil.getArticleImg());
+    }
+
     /**
      * 保存文章
      * @param map 文章要素
@@ -47,6 +66,7 @@ public class ArticleController extends BaseController {
      */
     @ApiOperation("发布文章/草稿")
     @PostMapping
+    @RequiresAuthentication
     public ResponseData saveArticle(@RequestBody Map<String, Object> map){
 
         boolean flag = articleService.saveArticle(map);
@@ -60,7 +80,7 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 上传图片
+     * 上传文章内图片
      * @param image
      * @return
      */

@@ -4,6 +4,8 @@ import com.ty.blog.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 /**
  * @ClassName: ArticleDao
  * @Description: 分类实体持久层
@@ -14,6 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TagDao extends JpaRepository<Tag, Long> {
 
-
+    Set<Tag> findAllByTagNameIn(Set<String> tagNames);
 
 }

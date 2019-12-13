@@ -107,15 +107,14 @@ public class Article implements Serializable {
     /**
      * 文章url
      */
-    @ApiModelProperty(value = "文章url")
-    @Column(nullable = false)
-    private String articleUrl;
+//    @ApiModelProperty(value = "文章url")
+//    @Column(nullable = false)
+//    private String articleUrl;
 
     /**
      * 文章点赞数
      */
     @ApiModelProperty(value = "文章点赞数")
-    @Builder.Default
     @Column(nullable = false)
     private Integer likes = 0;
 

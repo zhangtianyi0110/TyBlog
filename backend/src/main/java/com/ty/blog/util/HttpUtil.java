@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  *  @author zhangtianyi
  *  @Date 2019/12/3 17:06
  */
-public class HttpUtils {
+public class HttpUtil {
 
     /**
      * 获取request
