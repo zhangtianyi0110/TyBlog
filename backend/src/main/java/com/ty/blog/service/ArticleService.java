@@ -59,7 +59,8 @@ public class ArticleService extends BaseService {
      */
     public List<Article> getArticlesByAuthor(Long userId) {
         User author = userDao.findById(userId).get();
-        return articleDao.findAllByAuthor(author);
+        //return articleDao.findAllByAuthor(author).getContent();
+        return null;
     }
 
 

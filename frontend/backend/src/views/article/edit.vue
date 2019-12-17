@@ -9,7 +9,6 @@
             </el-form-item>
             <el-form-item label="文章分类" prop="categoryName">
               <el-select v-model="article.categoryName" placeholder="请选择文章分类" @change="getCategoryId">
-                <!-- <el-select v-model="article.categoryName" placeholder="请选择文章分类"> -->
                 <el-option
                   v-for="(category, index) in categories"
                   :key="index"
@@ -118,7 +117,6 @@ export default {
       inputVisible: false,
       inputValue: '',
       dialogVisible: false,
-      // categories: [],
       isReadPassword: false,
       tags: ['标签一', '标签二', '标签三'],
       categoryId: '',
@@ -150,18 +148,9 @@ export default {
     ])
   },
   mounted() {
-    // this.getCategories()
     this.getArticleImg()
   },
   methods: {
-    // 获取当前用户所有的文章分类
-    // getCategories() {
-    //   const userId = this.$store.state.user.user.userId
-    //   getCategories(userId).then(response => {
-    //     const { data } = response
-    //     this.categories = data
-    //   })
-    // },
     // 获取文章随机默认配图
     getArticleImg() {
       getArticleImg().then(response => {

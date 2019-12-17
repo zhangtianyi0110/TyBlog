@@ -29,11 +29,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -204,13 +205,16 @@ public class BlogApplicationTests {
     }
 
     @Test
-    public void test2() throws IOException {
+    public void test2() throws Exception {
 //        File file = new File("/static/article/img");
 //        System.out.println(file.exists());
 //        Resource resource = new ClassPathResource("static/article/img/default.jpg");
 //        File sourceFile =  resource.getFile();
-
-        System.out.println(BlogUtil.getArticleImg());
+        Page<Article> allByAuthor;
+        allByAuthor = articleDao.findAllByAuthor(userDao.findById(1l).get(), PageRequest.of(0, 2));
+        System.out.println(allByAuthor.getTotalPages());
+        System.out.println(allByAuthor.getTotalElements());
+        System.out.println(allByAuthor.getContent().size());
 
     }
 
