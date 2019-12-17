@@ -24,7 +24,7 @@
               <div slot="header" class="clearfix">
                 <span><strong>文章总量</strong></span>
               </div>
-              <el-tag effect="dark" class="box-tag">1111</el-tag>
+              <el-tag effect="dark" class="box-tag">{{ articles.length }}</el-tag>
             </el-card>
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
@@ -59,7 +59,8 @@ export default {
   computed: {
     ...mapGetters([
       'user',
-      'roles'
+      'roles',
+      'articles'
     ])
   },
   methods: {

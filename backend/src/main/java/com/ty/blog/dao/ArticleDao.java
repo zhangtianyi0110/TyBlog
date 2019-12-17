@@ -1,6 +1,7 @@
 package com.ty.blog.dao;
 
 import com.ty.blog.entity.Article;
+import com.ty.blog.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
      * @param author 用户笔名
      * @return 该作者所有文章集合
      */
-    List<Article> findAllByAuthor(String author);
+    List<Article> findAllByAuthor(User author);
 
 
 }

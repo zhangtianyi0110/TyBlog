@@ -31,21 +31,21 @@ public class ArticleController extends BaseController {
 
     /**
      * 获取某个作者文章总数
-     * @param author
+     * @param userId
      * @return
      */
     @ApiOperation("获取指定作者的文章总数量")
-    @GetMapping("count/{name}")
-    @RequiresAuthentication
-    public ResponseData getCount(@PathVariable("name") String author){
-        return ResponseUtil.success(articleService.getArticlesByAuthor(author).size());
+    @GetMapping("count/{userId}")
+//    @RequiresAuthentication
+    public ResponseData getCount(@PathVariable("userId") Long userId){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(userId).size());
     }
 
-    @ApiOperation("获取指定作者的文章总数量")
-    @GetMapping("{name}")
-    @RequiresAuthentication
-    public ResponseData getArticles(@PathVariable("name") String author){
-        return ResponseUtil.success(articleService.getArticlesByAuthor(author).size());
+    @ApiOperation("获取指定作者的所有文章")
+    @GetMapping("{userId}")
+//    @RequiresAuthentication
+    public ResponseData getArticles(@PathVariable("userId") Long userId){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(userId));
     }
 
     /**
@@ -84,7 +84,9 @@ public class ArticleController extends BaseController {
      * @param image
      * @return
      */
+    @ApiOperation("上传文章内图片")
     @PostMapping(value = "/articleImg")
+    @RequiresAuthentication
     public ResponseData uploadArticleImg(MultipartFile image) {
         return articleService.uploadArticleImg(request, image);
     }

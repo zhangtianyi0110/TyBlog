@@ -44,13 +44,22 @@ public class ArticleService extends BaseService {
     private CategoryService categoryService;
 
     /**
-     * 获取作者所有的文章列表
-     * @param author 作者名
+     * 获取作者文章总数
+     * @param userId
      * @return
      */
-    public List<Article> getArticlesByAuthor(String author) {
-        List<Article> articles = articleDao.findAllByAuthor(author);
-        return articles;
+    public Integer getArticleCountsByUserId(Long userId){
+        return this.getArticlesByAuthor(userId).size();
+    }
+
+    /**
+     * 获取作者所有的文章列表
+     * @param userId 作者名
+     * @return
+     */
+    public List<Article> getArticlesByAuthor(Long userId) {
+        User author = userDao.findById(userId).get();
+        return articleDao.findAllByAuthor(author);
     }
 
 

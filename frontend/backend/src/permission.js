@@ -42,6 +42,9 @@ router.beforeEach(async(to, from, next) => {
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
 
+          // 添加article信息进vuex
+          await addArticleInfo()
+
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
@@ -72,3 +75,14 @@ router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
+
+async function addArticleInfo() {
+  /**
+   * 添加article信息进vuex
+   */
+  const hasArticles = store.getters.articles && store.getters.articles.length > 0
+  if (!hasArticles) {
+    await store.dispatch('article/getArticles')
+    await store.dispatch('article/getCategories')
+  }
+}
