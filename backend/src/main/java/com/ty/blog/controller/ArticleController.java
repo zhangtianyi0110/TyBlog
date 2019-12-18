@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +39,7 @@ public class ArticleController extends BaseController {
     @GetMapping("count/{userId}")
 //    @RequiresAuthentication
     public ResponseData getCount(@PathVariable("userId") Long userId){
-        return ResponseUtil.success(articleService.getArticlesByAuthor(userId).size());
+        return ResponseUtil.success(articleService.getArticleCountsByUserId(userId).size());
     }
 
     @ApiOperation("获取指定作者的所有文章")
@@ -46,6 +47,22 @@ public class ArticleController extends BaseController {
 //    @RequiresAuthentication
     public ResponseData getArticles(@PathVariable("userId") Long userId){
         return ResponseUtil.success(articleService.getArticlesByAuthor(userId));
+    }
+
+    /**
+     * 获取指定作者指定状态的所有已发布文章，分页
+     * @param userId 用户id
+     * @param state 文章状态
+     * @param curPage  当前页
+     * @param size 当前页数量
+     * @return
+     */
+    @ApiOperation("获取指定作者指定状态的所有文章，分页")
+    @GetMapping("/{userId}/{state}")
+//    @RequiresAuthentication
+    public ResponseData getArticles(@PathVariable("userId") Long userId, @PathVariable("state") Integer state
+            , @RequestParam("curPage") Integer curPage, @RequestParam("size") Integer size){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(userId, curPage-1, size, state));
     }
 
     /**

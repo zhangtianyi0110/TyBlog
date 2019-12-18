@@ -91,6 +91,13 @@ export const constantRoutes = [
         name: 'edit',
         component: () => import('@/views/article/edit'),
         meta: { title: '编辑文章', icon: 'edit' }
+      },
+      {
+        path: 'detail',
+        name: 'detail',
+        hidden: true,
+        component: () => import('@/views/article/detail'),
+        meta: { title: '文章详情', icon: 'detail' }
       }
     ]
 

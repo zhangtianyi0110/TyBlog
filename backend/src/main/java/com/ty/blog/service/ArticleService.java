@@ -11,6 +11,8 @@ import com.ty.blog.util.ResponseUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: UserService
@@ -44,23 +47,45 @@ public class ArticleService extends BaseService {
     private CategoryService categoryService;
 
     /**
-     * 获取作者文章总数
+     * 获取作者所有的文章列表,不分页
      * @param userId
      * @return
      */
-    public Integer getArticleCountsByUserId(Long userId){
-        return this.getArticlesByAuthor(userId).size();
+    public List<Article> getArticleCountsByUserId(Long userId){
+        User author = userDao.findById(userId).get();
+        return articleDao.findAllByAuthor(author);
     }
 
     /**
-     * 获取作者所有的文章列表
+     * 获取作者所有的文章列表,不分页
      * @param userId 作者名
      * @return
      */
     public List<Article> getArticlesByAuthor(Long userId) {
         User author = userDao.findById(userId).get();
-        //return articleDao.findAllByAuthor(author).getContent();
-        return null;
+        return articleDao.findAllByAuthor(author);
+    }
+
+    /**
+     * 获取作者所有的文章列表,分页
+     * @param userId 作者名
+     * @param curPage 当前页
+     * @param size 当前页数目
+     * @param state 文章状态
+     * @return
+     */
+    public List<Article> getArticlesByAuthor(Long userId, Integer curPage, Integer size, Integer state) {
+        User author = userDao.findById(userId).get();
+        Pageable pageable = PageRequest.of(curPage, size);
+        List<Article> articles = articleDao.findAllByAuthor(author, pageable).getContent();
+        if(state == 0){
+            return articles.stream().filter(article -> article.getState() == 0).collect(Collectors.toList());
+        }else if(state == 1){
+            return articles.stream().filter(article -> article.getState() == 1).collect(Collectors.toList());
+        }else if(state == 2){
+            return articles.stream().filter(article -> article.getState() == 2).collect(Collectors.toList());
+        }
+        return articleDao.findAllByAuthor(author, pageable).getContent();
     }
 
 

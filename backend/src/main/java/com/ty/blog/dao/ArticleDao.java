@@ -3,7 +3,6 @@ package com.ty.blog.dao;
 import com.ty.blog.entity.Article;
 import com.ty.blog.entity.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,11 +20,16 @@ import java.util.List;
 public interface ArticleDao extends JpaRepository<Article, Long> {
 
     /**
-     * 通过用户名查询用户对象
+     * 通过用户名查询文章集合，不分页
+     * @param author 用户笔名
+     * @return 该作者所有文章集合
+     */
+    List<Article> findAllByAuthor(User author);
+
+    /**
+     * 通过用户名查询文章集合，分页
      * @param author 用户笔名
      * @return 该作者所有文章集合
      */
     Page<Article> findAllByAuthor(User author, Pageable pageRequest);
-
-
 }

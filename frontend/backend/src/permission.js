@@ -82,6 +82,7 @@ async function addArticleInfo() {
    */
   const hasArticles = store.getters.articles && store.getters.articles.length > 0
   if (!hasArticles) {
+    await store.dispatch('article/getArticleCounts')
     await store.dispatch('article/getArticles')
     await store.dispatch('article/getCategories')
   }

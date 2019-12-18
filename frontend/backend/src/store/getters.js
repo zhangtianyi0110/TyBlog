@@ -7,6 +7,7 @@ const getters = {
   perms: state => state.user.perms,
   permission_routes: state => state.permission.routes,
   categories: state => state.article.categories,
-  articles: state => state.article.articles
+  // articles: state => state.article.articles,
+  articleCounts: state => state.article.articleCounts
 }
 export default getters

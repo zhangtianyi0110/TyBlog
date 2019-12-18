@@ -92,6 +92,7 @@ public class Article implements Serializable {
      * 发布日期
      */
     @ApiModelProperty(value = "发布日期")
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date publishDate;
@@ -100,6 +101,7 @@ public class Article implements Serializable {
      * 更新文章日期
      */
     @ApiModelProperty(value = "更新文章日期")
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date updateDate;
@@ -157,9 +159,9 @@ public class Article implements Serializable {
     private Boolean isRead = true;
 
     /**
-     * 文章状态,0草稿1已发布
+     * 文章状态,0草稿1已发布,2回收站待清空
      */
-    @ApiModelProperty(value = "文章状态,0草稿1已发布")
+    @ApiModelProperty(value = "文章状态,0草稿1已发布,2回收站待清空")
     @Column(nullable = false)
     private Integer state;
 
@@ -214,6 +216,7 @@ public class Article implements Serializable {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date createTime;
@@ -222,6 +225,7 @@ public class Article implements Serializable {
      * 最后修改时间
      */
     @ApiModelProperty(value = "最后修改时间")
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date modifyTime;
