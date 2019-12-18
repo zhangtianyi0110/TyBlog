@@ -25,17 +25,6 @@ export function getArticleCounts(userId) {
 }
 
 /**
- * 获取用户文章集合
- * @param {用户id} userId
- */
-export function getArticles(userId) {
-  return request({
-    url: '/articles/' + userId,
-    method: 'get'
-  })
-}
-
-/**
  * 获取用户文章集合,分页数据
  * @param {包括用户id,当前页,当前页数量,文章状态} data
  */
@@ -44,8 +33,9 @@ export function getCurPageArticles(data) {
     url: '/articles/' + data.userId + '/' + data.state,
     method: 'get',
     params: {
-      curPage: data.curPage,
-      size: data.size
+      page: data.page,
+      size: data.size,
+      sort: data.sort
     }
   })
 }

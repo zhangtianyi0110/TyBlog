@@ -7,6 +7,9 @@ import com.ty.blog.util.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,30 +42,29 @@ public class ArticleController extends BaseController {
     @GetMapping("count/{userId}")
 //    @RequiresAuthentication
     public ResponseData getCount(@PathVariable("userId") Long userId){
-        return ResponseUtil.success(articleService.getArticleCountsByUserId(userId).size());
+        return ResponseUtil.success(articleService.getAllByUserId(userId).size());
     }
 
     @ApiOperation("获取指定作者的所有文章")
     @GetMapping("{userId}")
 //    @RequiresAuthentication
     public ResponseData getArticles(@PathVariable("userId") Long userId){
-        return ResponseUtil.success(articleService.getArticlesByAuthor(userId));
+        return ResponseUtil.success(articleService.getAllByUserId(userId));
     }
 
     /**
      * 获取指定作者指定状态的所有已发布文章，分页
      * @param userId 用户id
      * @param state 文章状态
-     * @param curPage  当前页
-     * @param size 当前页数量
+     * @param pageable  分页对象
      * @return
      */
     @ApiOperation("获取指定作者指定状态的所有文章，分页")
     @GetMapping("/{userId}/{state}")
 //    @RequiresAuthentication
-    public ResponseData getArticles(@PathVariable("userId") Long userId, @PathVariable("state") Integer state
-            , @RequestParam("curPage") Integer curPage, @RequestParam("size") Integer size){
-        return ResponseUtil.success(articleService.getArticlesByAuthor(userId, curPage-1, size, state));
+    public ResponseData getArticles(@PathVariable("userId") Long userId,
+                                    @PathVariable("state") Integer state, Pageable pageable){
+        return ResponseUtil.success(articleService.getArticlesByAuthor(userId, state, pageable));
     }
 
     /**

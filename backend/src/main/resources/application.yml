@@ -7,6 +7,10 @@ spring:
       force: true
       charset: UTF-8
       enabled: true
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
   # JPA 配置
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

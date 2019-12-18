@@ -1,8 +1,8 @@
-import { getCategories, getArticleCounts } from '@/api/article'
+import { getCategories, getCurPageArticles, getArticleCounts } from '@/api/article'
 
 const state = {
   categories: [],
-  // articles: [],
+  latestarticles: [],
   articleCounts: 0
 }
 
@@ -10,9 +10,9 @@ const mutations = {
   SET_CATEGORIES: (state, categories) => {
     state.categories = categories
   },
-  // SET_ARTICLES: (state, articles) => {
-  //   state.articles = articles
-  // },
+  SET_LATESTARTICLES: (state, latestarticles) => {
+    state.latestarticles = latestarticles
+  },
   SET_ARTICLECOUNTS: (state, articleCounts) => {
     state.articleCounts = articleCounts
   }
@@ -32,19 +32,25 @@ const actions = {
       })
     })
   },
-  // // 获取所有文章集合
-  // getArticles({ commit, rootState }) {
-  //   const userId = rootState.user.user.userId
-  //   return new Promise((resolve, reject) => {
-  //     getArticles(userId).then(response => {
-  //       const { data } = response
-  //       commit('SET_ARTICLES', data)
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // },
+  // 获取最新的文章集合，默认数量取5
+  getLatestArticles({ commit, rootState }) {
+    const data = {
+      userId: rootState.user.user.userId,
+      state: 1,
+      page: 1,
+      size: 5,
+      sort: 'updateDate'
+    }
+    return new Promise((resolve, reject) => {
+      getCurPageArticles(data).then(response => {
+        const { data } = response
+        commit('SET_LATESTARTICLES', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // 获取该作者文章总数
   getArticleCounts({ commit, rootState }) {
     const userId = rootState.user.user.userId

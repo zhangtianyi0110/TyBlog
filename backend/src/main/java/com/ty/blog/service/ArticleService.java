@@ -10,9 +10,11 @@ import com.ty.blog.util.JacksonUtil;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,17 +53,7 @@ public class ArticleService extends BaseService {
      * @param userId
      * @return
      */
-    public List<Article> getArticleCountsByUserId(Long userId){
-        User author = userDao.findById(userId).get();
-        return articleDao.findAllByAuthor(author);
-    }
-
-    /**
-     * 获取作者所有的文章列表,不分页
-     * @param userId 作者名
-     * @return
-     */
-    public List<Article> getArticlesByAuthor(Long userId) {
+    public List<Article> getAllByUserId(Long userId){
         User author = userDao.findById(userId).get();
         return articleDao.findAllByAuthor(author);
     }
@@ -69,14 +61,17 @@ public class ArticleService extends BaseService {
     /**
      * 获取作者所有的文章列表,分页
      * @param userId 作者名
-     * @param curPage 当前页
-     * @param size 当前页数目
      * @param state 文章状态
+     * @param pageable 分页对象
      * @return
      */
-    public List<Article> getArticlesByAuthor(Long userId, Integer curPage, Integer size, Integer state) {
+    public List<Article> getArticlesByAuthor(Long userId, Integer state, Pageable pageable) {
+
         User author = userDao.findById(userId).get();
-        Pageable pageable = PageRequest.of(curPage, size);
+        //如果sort不为null，就需要排序，默认倒序
+        if(pageable.getSort() != Sort.unsorted()){
+            pageable.getSort().descending();
+        }
         List<Article> articles = articleDao.findAllByAuthor(author, pageable).getContent();
         if(state == 0){
             return articles.stream().filter(article -> article.getState() == 0).collect(Collectors.toList());

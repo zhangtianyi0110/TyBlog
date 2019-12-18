@@ -36,7 +36,7 @@ export default {
       loading: false,
       keywords: '',
       articleData: [],
-      curPage: 1,
+      page: 1,
       size: 10
     }
   },
@@ -50,7 +50,7 @@ export default {
       const requestData = {
         userId: this.$store.state.user.user.userId,
         state: this.state,
-        curPage: this.curPage,
+        page: this.page,
         size: this.size
       }
       console.log(requestData.state)
@@ -75,7 +75,10 @@ export default {
     },
     getArticleInfo(row) {
       console.log(row)
-      this.$router.push({path: '/article/detail', query: {article: row}})
+      this.$router.push({
+        path: '/article/detail',
+        query: { article: row }
+      })
     }
   }
 }

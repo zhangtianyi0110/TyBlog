@@ -1,6 +1,6 @@
 <template>
-  <div class="page-contianer" v-loading="loading">
-
+  <div v-loading="loading" class="page-contianer">
+    msg
   </div>
 </template>
 
@@ -10,25 +10,16 @@ export default {
   components: {
 
   },
-  mounted: function () {
-    const article = this.$route.query.article;
-    this.activeName = this.$route.query.an
-    var _this = this;
-    this.loading = true;
-    getRequest("/article/" + aid).then(resp=> {
-      if (resp.status == 200) {
-        _this.article = resp.data;
-      }
-      _this.loading = false;
-    }, resp=> {
-      _this.loading = false;
-      _this.$message({type: 'error', message: '页面加载失败!'});
-    });
-  },
   data() {
     return {
       loading: false
     }
+  },
+  mounted() {
+    const article = this.$route.query.article
+    console.log(article)
+    this.activeName = this.$route.query.an
+    this.loading = true
   }
 }
 </script>
