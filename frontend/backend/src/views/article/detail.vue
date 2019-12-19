@@ -1,6 +1,14 @@
 <template>
-  <div v-loading="loading" class="page-contianer">
-    msg
+  <div v-loading="loading" class="detail-contianer">
+    <el-card class="detail-card">
+      <div class="header" :style="url">
+        <h3>{{ article.title }}</h3>
+
+      </div>
+      <div>
+        msg
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -12,17 +20,39 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      url: '',
+      article: ''
     }
   },
   mounted() {
-    const article = this.$route.query.article
-    console.log(article)
-    this.activeName = this.$route.query.an
     this.loading = true
+    this.article = this.$route.query.article.articleId === undefined ? this.$store.state.article.latestarticles[0] : this.$route.query.article
+    this.init()
+    this.loading = false
+  },
+  methods: {
+    init() {
+      this.url = `background-image: url(` + this.article.articleImg + `)`
+      this.activeName = this.$route.query.an
+    }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+.detail-contianer {
+
+  .detail-card {
+
+    .header {
+      height: 200px;
+      width: 100%;
+      padding: 0px;
+      background-size:100% 100%;
+      background-repeat:no-repeat;
+    }
+  }
+}
 </style>

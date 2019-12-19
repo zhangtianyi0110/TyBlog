@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     init() {
-      console.log(this.state)
       const requestData = {
         userId: this.$store.state.user.user.userId,
         state: this.state,
