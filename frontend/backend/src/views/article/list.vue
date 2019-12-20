@@ -1,5 +1,5 @@
 <template>
-  <div class="page-contianer">
+  <div v-loading="loading" class="page-contianer">
     <el-card class="box-card">
       <el-tabs type="article-card" shadow="always">
         <el-tab-pane label="全部文章">
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-
+      loading: false
     }
   }
 }

@@ -63,7 +63,8 @@ public class ArticleController extends BaseController {
     @GetMapping("/{userId}/{state}")
 //    @RequiresAuthentication
     public ResponseData getArticles(@PathVariable("userId") Long userId,
-                                    @PathVariable("state") Integer state, Pageable pageable){
+                                    @PathVariable("state") Integer state,
+                                    Pageable pageable){
         return ResponseUtil.success(articleService.getArticlesByAuthor(userId, state, pageable));
     }
 
