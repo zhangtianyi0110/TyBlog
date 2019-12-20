@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.ty.blog.constant.SecurityConsts;
 import com.ty.blog.entity.ResponseData;
+import com.ty.blog.exception.GlobalException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -154,6 +155,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         try {
             HttpServletRequest request = WebUtils.toHttp(servletRequest);
             HttpServletResponse response = WebUtils.toHttp(servletResponse);
+            if(WebUtils.toHttp(request).getServletPath().endsWith("logout")){
+                responseData.setData(GlobalException.builder().code(HttpStatus.UNAUTHORIZED.value())
+                        .message("退出登录失败，已经为退出状态").build());
+            }
             request.setAttribute(SecurityConsts.FILTER_EXCEPTION, responseData);
             //转发到ErrorController
             request.getRequestDispatcher("/error/rethrow")

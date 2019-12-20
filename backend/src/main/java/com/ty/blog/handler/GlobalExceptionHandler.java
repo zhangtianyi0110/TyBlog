@@ -2,6 +2,7 @@ package com.ty.blog.handler;
 
 import com.google.gson.Gson;
 import com.ty.blog.entity.ResponseData;
+import com.ty.blog.exception.GlobalException;
 import com.ty.blog.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,18 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @ExceptionHandler(Exception.class)
+    public ResponseData handlerExcepiton(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
+        log.error("系统异常：", e);
+        return ResponseUtil.failure(500, "系统异常:" + e.getMessage());
+    }
+
+    @ExceptionHandler(GlobalException.class)
+    public ResponseData handlerGlobalExcepiton(HttpServletRequest request, HttpServletResponse response, GlobalException e) throws IOException {
+        log.error("自定义异常：", e);
+        return ResponseUtil.failure(e.getCode(), "自定义异常:" + e.getMessage());
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseData handleConstraintViolationException(ConstraintViolationException e) {

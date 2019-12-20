@@ -92,12 +92,12 @@ public class LoginController extends BaseController {
 
     /**
      * 获取用户信息
-     * @param token 用户token
      * @return
      */
     @GetMapping("/info")
     @RequiresAuthentication
-    public ResponseData info(String token){
+    public ResponseData info(){
+        String token = request.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
         Map<String, Object> info = userService.getInfo(token);
         return ResponseUtil.success(info);
     }
@@ -106,10 +106,10 @@ public class LoginController extends BaseController {
      * 登出
      * @return
      */
-    @PostMapping("/logout")
+    @GetMapping("/logout")
+    @RequiresAuthentication
     public ResponseData logout(){
-        Subject subject = SecurityUtils.getSubject();
-        String token = (String) subject.getPrincipal();
+        String token = request.getHeader(SecurityConsts.REQUEST_AUTH_HEADER);
         String username = JwtUtil.getUsername(token);
         //清除redis缓存
         jwtRedisCache.put(SecurityConsts.USERNAME_TOKEN + username, null, 0);
