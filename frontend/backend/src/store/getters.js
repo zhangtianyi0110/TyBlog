@@ -8,6 +8,7 @@ const getters = {
   permission_routes: state => state.permission.routes,
   categories: state => state.article.categories,
   articles: state => state.article.latestarticles,
-  articleCounts: state => state.article.articleCounts
+  articleCounts: state => state.article.articleCounts,
+  articleDeatil: state => state.article.articleDeatil
 }
 export default getters

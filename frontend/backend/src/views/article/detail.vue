@@ -2,11 +2,14 @@
   <div v-loading="loading" class="detail-contianer">
     <el-card class="detail-card">
       <div class="header" :style="url">
-        <h3>{{ article.title }}</h3>
-
+        <div class="title-info">
+          <h2>{{ article.title }}</h2>
+          <h5>发表于 {{ article.publishDate }} | 更新于 {{ article.updateDate }} | TyBlog</h5>
+          <h5>阅读量 {{ article.readCount }} | 点赞数 {{ article.likes }} | 评论数 {{}} </h5>
+        </div>
       </div>
       <div>
-        msg
+        <div style="text-align: left" v-html="article.htmlContent" />
       </div>
     </el-card>
   </div>
@@ -27,14 +30,15 @@ export default {
   },
   mounted() {
     this.loading = true
-    this.article = this.$route.query.article.articleId === undefined ? this.$store.state.article.latestarticles[0] : this.$route.query.article
     this.init()
     this.loading = false
   },
   methods: {
     init() {
+      this.article = this.$route.query.article.articleId === undefined ? this.$store.state.article.latestarticles[0] : this.$route.query.article
+      console.log(this.article)
+      this.$store.commit('article/SET_ARTICLE_DETAIL', this.article)
       this.url = `background-image: url(` + this.article.articleImg + `)`
-      this.activeName = this.$route.query.an
     }
   }
 }
@@ -47,11 +51,18 @@ export default {
   .detail-card {
 
     .header {
+
       height: 200px;
       width: 100%;
       padding: 0px;
       background-size:100% 100%;
       background-repeat:no-repeat;
+
+      .title-info {
+        padding-left: 10%;
+        padding-top: 8%;
+        color: #ffffff;
+      }
     }
   }
 }

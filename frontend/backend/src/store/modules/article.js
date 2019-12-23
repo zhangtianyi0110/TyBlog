@@ -3,18 +3,22 @@ import { getCategories, getCurPageArticles, getArticleCounts } from '@/api/artic
 const state = {
   categories: [],
   latestarticles: [],
-  articleCounts: 0
+  articleCounts: 0,
+  articleDetail: ''
 }
 
 const mutations = {
   SET_CATEGORIES: (state, categories) => {
     state.categories = categories
   },
-  SET_LATESTARTICLES: (state, latestarticles) => {
+  SET_LATEST_ARTICLES: (state, latestarticles) => {
     state.latestarticles = latestarticles
   },
-  SET_ARTICLECOUNTS: (state, articleCounts) => {
+  SET_ARTICLE_COUNTS: (state, articleCounts) => {
     state.articleCounts = articleCounts
+  },
+  SET_ARTICLE_DETAIL: (state, articleDetail) => {
+    state.articleDetail = articleDetail
   }
 }
 
@@ -44,7 +48,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getCurPageArticles(data).then(response => {
         const { data } = response
-        commit('SET_LATESTARTICLES', data)
+        commit('SET_LATEST_ARTICLES', data)
         resolve()
       }).catch(error => {
         reject(error)
@@ -57,7 +61,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getArticleCounts(userId).then(response => {
         const { data } = response
-        commit('SET_ARTICLECOUNTS', data)
+        commit('SET_ARTICLE_COUNTS', data)
         resolve()
       }).catch(error => {
         reject(error)
