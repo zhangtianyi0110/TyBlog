@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="detail-contianer">
     <el-card class="detail-card">
-      <div class="header" :style="url">
+      <div class="header" :style="`background-image: url(` + url + `)`">
         <div class="title-info">
           <h2>{{ article.title }}</h2>
           <h5>发表于 {{ article.publishDate }} | 更新于 {{ article.updateDate }} | TyBlog</h5>
@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     init() {
-      this.article = this.$route.query.article.articleId === undefined ? this.$store.state.article.latestarticles[0] : this.$route.query.article
-      console.log(this.article)
-      this.$store.commit('article/SET_ARTICLE_DETAIL', this.article)
-      this.url = `background-image: url(` + this.article.articleImg + `)`
+      this.article = this.$store.getters.articleDetail
+      console.log(this.article.articleImg)
+      // this.url = `background-image: url(` + this.article.articleImg + `)`
+      this.url = this.article.articleImg
     }
   }
 }
@@ -57,6 +57,7 @@ export default {
       padding: 0px;
       background-size:100% 100%;
       background-repeat:no-repeat;
+      // opacity:0.4;
 
       .title-info {
         padding-left: 10%;

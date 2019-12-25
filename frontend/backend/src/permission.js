@@ -85,9 +85,8 @@ async function addArticleInfo() {
     await store.dispatch('article/getArticleCounts')
     await store.dispatch('article/getLatestArticles')
     await store.dispatch('article/getCategories')
-    const hasDetail = store.getters.articleDeatil
+    const hasDetail = store.getters.articleDetail
     if (!hasDetail) {
-      console.log(hasDetail)
       store.commit('article/SET_ARTICLE_DETAIL', store.getters.articles[0])
     }
   }

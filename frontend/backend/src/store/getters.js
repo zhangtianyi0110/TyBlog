@@ -9,6 +9,6 @@ const getters = {
   categories: state => state.article.categories,
   articles: state => state.article.latestarticles,
   articleCounts: state => state.article.articleCounts,
-  articleDeatil: state => state.article.articleDeatil
+  articleDetail: state => state.article.articleDetail
 }
 export default getters
