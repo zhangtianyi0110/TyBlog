@@ -6,6 +6,8 @@ import com.ty.blog.shiro.jwt.JwtUtil;
 import com.ty.blog.util.JacksonUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +23,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService extends BaseService {
+
+    public void updateLastLoginTime(User user){
+        user.setLastLoginTime(Calendar.getInstance().getTime());
+        user.setModifyTime(new Date());
+        userDao.saveAndFlush(user);
+    }
 
     /**
      * 根据用户名获取用户对象

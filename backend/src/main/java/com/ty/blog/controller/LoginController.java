@@ -76,6 +76,9 @@ public class LoginController extends BaseController {
                 throw new IncorrectCredentialsException();
             }
         }
+        //更新最后一次登录时间
+        userService.updateLastLoginTime(realUser);
+
         String currentTimeMillis = String.valueOf(System.currentTimeMillis());
         //生成签名
         String jwt = JwtUtil.sign(user.getUsername(), currentTimeMillis);

@@ -3,6 +3,7 @@ package com.ty.blog.service;
 import com.hankcs.hanlp.HanLP;
 import com.ty.blog.base.BaseService;
 import com.ty.blog.entity.Article;
+import com.ty.blog.entity.Comment;
 import com.ty.blog.entity.ResponseData;
 import com.ty.blog.entity.User;
 import com.ty.blog.util.BlogUtil;
@@ -10,9 +11,7 @@ import com.ty.blog.util.JacksonUtil;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -56,6 +56,15 @@ public class ArticleService extends BaseService {
     public List<Article> getAllByUserId(Long userId){
         User author = userDao.findById(userId).get();
         return articleDao.findAllByAuthor(author);
+    }
+
+    /**
+     * 获取指定文章的所有评论
+     * @param articleId
+     * @return
+     */
+    public Set<Comment> getArticleComments(Long articleId){
+        return articleDao.findById(articleId).get().getComments();
     }
 
     /**

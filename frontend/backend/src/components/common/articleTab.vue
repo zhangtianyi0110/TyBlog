@@ -22,7 +22,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import { getCurPageArticles } from '@/api/article'
+import { getCurPageArticles, getArticlesByTitle } from '@/api/article'
 export default {
   name: 'ArticleTab',
   props: {
@@ -41,8 +41,9 @@ export default {
     }
   },
   mounted() {
-    this.init()
     this.loading = true
+    this.init()
+    this.loading = false
   },
   methods: {
     init() {
@@ -64,19 +65,31 @@ export default {
           const { data } = response
           if (response.code === 200) {
             this.articleData = data
-            console.log(data)
           }
         })
       }
     },
-    searchClick() {
-
+    async searchClick() {
+      console.log(this.keywords)
+      if (!this.keywords) {
+        this.$message.error('查询条件为空！')
+      } else {
+        await getArticlesByTitle(this.keywords).then(response => {
+          const { data } = response
+          if (data) {
+            this.articleData = data
+          } else {
+            this.$message.error('查无此文章！')
+          }
+        }).catch(response => {
+          this.$message.error('查询出错！')
+        })
+      }
     },
     getArticleInfo(row) {
-      console.log(row)
+      this.$store.commit('article/SET_ARTICLE_DETAIL', row)
       this.$router.push({
-        path: '/article/detail',
-        query: { article: row }
+        path: '/article/detail'
       })
     }
   }

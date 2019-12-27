@@ -6,8 +6,8 @@ import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.ResponseUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -28,9 +28,9 @@ public class CategoryController extends BaseController {
      * @param userId
      * @return
      */
-    @GetMapping("{userId}")
+    @GetMapping
     @RequiresAuthentication
-    public ResponseData getCategories(@PathVariable("userId") Long userId){
+    public ResponseData getCategories(@RequestParam("userId") Long userId){
         Set<Category> categories = categoryService.getCategories(userId);
         return ResponseUtil.success(categories);
     }

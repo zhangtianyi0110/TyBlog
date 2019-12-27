@@ -8,8 +8,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,10 +39,15 @@ public class ArticleController extends BaseController {
     @ApiOperation("获取指定作者的文章总数量")
     @GetMapping("count/{userId}")
 //    @RequiresAuthentication
-    public ResponseData getCount(@PathVariable("userId") Long userId){
+    public ResponseData getCount(@RequestParam("userId") Long userId){
         return ResponseUtil.success(articleService.getAllByUserId(userId).size());
     }
 
+    /**
+     * 获取指定作者的所有文章
+     * @param userId
+     * @return
+     */
     @ApiOperation("获取指定作者的所有文章")
     @GetMapping("{userId}")
 //    @RequiresAuthentication
@@ -66,6 +69,24 @@ public class ArticleController extends BaseController {
                                     @PathVariable("state") Integer state,
                                     Pageable pageable){
         return ResponseUtil.success(articleService.getArticlesByAuthor(userId, state, pageable));
+    }
+
+    /**
+     * 获取文章所有评论
+     * @param articleId
+     * @return
+     */
+    @ApiOperation("获取文章所有评论")
+    @GetMapping("/{articleId}/comments")
+    public ResponseData getArticleComments(@PathVariable("articleId") Long articleId){
+        return ResponseUtil.success(articleService.getArticleComments(articleId));
+    }
+
+
+    @ApiOperation("获取文章所有评论")
+    @GetMapping("/title/{title}")
+    public ResponseData getArticlesByTitle(@PathVariable("title") String title){
+        return null;
     }
 
     /**
