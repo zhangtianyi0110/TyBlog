@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +36,8 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ApiOperation("获取指定作者的文章总数量")
-    @GetMapping("count/{userId}")
-//    @RequiresAuthentication
-    public ResponseData getCount(@RequestParam("userId") Long userId){
+    @GetMapping("count/users/{userId}")
+    public ResponseData getCount(@PathVariable("userId") Long userId){
         return ResponseUtil.success(articleService.getAllByUserId(userId).size());
     }
 
@@ -49,8 +47,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ApiOperation("获取指定作者的所有文章")
-    @GetMapping("{userId}")
-//    @RequiresAuthentication
+    @GetMapping("users/{userId}")
     public ResponseData getArticles(@PathVariable("userId") Long userId){
         return ResponseUtil.success(articleService.getAllByUserId(userId));
     }
@@ -63,8 +60,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ApiOperation("获取指定作者指定状态的所有文章，分页")
-    @GetMapping("/{userId}/{state}")
-//    @RequiresAuthentication
+    @GetMapping("users/{userId}/states/{state}")
     public ResponseData getArticles(@PathVariable("userId") Long userId,
                                     @PathVariable("state") Integer state,
                                     Pageable pageable){

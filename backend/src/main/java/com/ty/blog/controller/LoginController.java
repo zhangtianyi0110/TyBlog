@@ -9,6 +9,7 @@ import com.ty.blog.shiro.jwt.JwtRedisCache;
 import com.ty.blog.shiro.jwt.JwtUtil;
 import com.ty.blog.util.Md5Util;
 import com.ty.blog.util.ResponseUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -60,8 +60,8 @@ public class LoginController extends BaseController {
      * @return token
      * @throws Exception
      */
+    @ApiOperation("登录")
     @PostMapping("/login")
-    @ResponseBody
     public ResponseData login(@Valid @RequestBody User user) throws Exception{
         log.info("开始认证...");
         String username = user.getUsername();
@@ -97,6 +97,7 @@ public class LoginController extends BaseController {
      * 获取用户信息
      * @return
      */
+    @ApiOperation("获取用户信息")
     @GetMapping("/info")
     @RequiresAuthentication
     public ResponseData info(){
@@ -109,6 +110,7 @@ public class LoginController extends BaseController {
      * 登出
      * @return
      */
+    @ApiOperation("登出")
     @GetMapping("/logout")
     @RequiresAuthentication
     public ResponseData logout(){

@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export function getCategories(userId) {
   return request({
-    url: '/categories/' + userId,
+    url: '/categories/users/' + userId,
     method: 'get'
   })
 }
@@ -19,7 +19,7 @@ export function getCategories(userId) {
  */
 export function getArticleCounts(userId) {
   return request({
-    url: '/articles/count/' + userId,
+    url: '/articles/count/users/' + userId,
     method: 'get'
   })
 }
@@ -30,7 +30,7 @@ export function getArticleCounts(userId) {
  */
 export function getCurPageArticles(data) {
   return request({
-    url: '/articles/' + data.userId + '/' + data.state,
+    url: '/articles/users/' + data.userId + '/states/' + data.state,
     method: 'get',
     params: {
       page: data.page,
