@@ -75,3 +75,14 @@ export function uploadArticleImg(data) {
   })
 }
 
+/**
+ * 通过文章标题获取文章
+ * @param {文章标题} title
+ */
+export function getArticlesByTitle(title) {
+  return request({
+    url: '/articles/titles/' + title,
+    method: 'get'
+  })
+}
+

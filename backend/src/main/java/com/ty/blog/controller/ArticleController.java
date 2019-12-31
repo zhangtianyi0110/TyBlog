@@ -1,6 +1,7 @@
 package com.ty.blog.controller;
 
 import com.ty.blog.base.BaseController;
+import com.ty.blog.entity.Article;
 import com.ty.blog.entity.ResponseData;
 import com.ty.blog.util.BlogUtil;
 import com.ty.blog.util.ResponseUtil;
@@ -80,9 +81,10 @@ public class ArticleController extends BaseController {
 
 
     @ApiOperation("获取文章所有评论")
-    @GetMapping("/title/{title}")
+    @GetMapping("/titles/{title}")
     public ResponseData getArticlesByTitle(@PathVariable("title") String title){
-        return null;
+        Article article = articleService.getArticlesByTitle(title);
+        return ResponseUtil.success(article);
     }
 
     /**

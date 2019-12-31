@@ -4,7 +4,6 @@ import com.ty.blog.entity.Article;
 import com.ty.blog.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +32,14 @@ public interface ArticleDao extends JpaRepository<Article, Long> {
      * @return 该作者所有文章集合
      */
     Page<Article> findAllByAuthor(User author, Pageable pageRequest);
+
+
+    /**
+     * 通过标题查找文章
+     * @param title 标题
+     * @return
+     */
+    Article findByTitle(String title);
+
 
 }

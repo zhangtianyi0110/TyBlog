@@ -93,6 +93,11 @@ public class ArticleService extends BaseService {
     }
 
 
+    /**
+     * 保存文章
+     * @param map
+     * @return
+     */
     public boolean saveArticle(Map<String, Object> map){
         Map<String, Object> articleMap = (Map<String, Object>) map.get("article");
         articleMap.remove("categoryName");
@@ -151,6 +156,16 @@ public class ArticleService extends BaseService {
             e.printStackTrace();
         }
         return ResponseUtil.failure(500, "上传失败");
+    }
+
+
+    /**
+     * 通过标题查询指定文章
+     * @param title
+     * @return
+     */
+    public Article getArticlesByTitle(String title){
+        return articleDao.findByTitle(title);
     }
 
 }
