@@ -7,28 +7,30 @@
       style="width: 400px"
       size="small"
     />
-    <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick">搜索</el-button>
-    <el-table :data="articleData" stripe style="width: 100%">
-      <el-table-column v-if="showEdit || showDelete" type="selection" width="35" align="left">
-        <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
-      </el-table-column>
+    <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick(state)">搜索</el-button>
+    <el-table v-loading="loading" :data="articleData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table-column v-if="showEdit || showDelete" type="selection" width="35" align="left" />
       <el-table-column label="标题" width="180">
-        <el-checkbox-group @change="handleCheckedCitiesChange">
-          <el-checkbox label="..">..</el-checkbox>
-        </el-checkbox-group>
         <template slot-scope="scope">
-          <el-link type="primary" @click="getArticleInfo(scope.row)">{{ scope.row.title }}</el-link>
+          <el-button type="text" @click="getArticleInfo(scope.row)">{{ scope.row.title }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="作者" width="180">
         <template slot-scope="scope">
-          <el-link type="primary" @click="getAuthorInfo()">{{ scope.row.author.nickname }}</el-link>
+          <el-button type="primary" plain @click="getAuthorInfo()">{{ scope.row.author.nickname }}</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="category.categoryName" label="所属分类" />
-      <el-table-column prop="updateDate" label="最后更新时间" />
+      <el-table-column label="最后更新时间">
+        <template slot-scope="scope">
+          <i class="el-icon-time"><span style="margin-left: 10px">{{ scope.row.updateDate }}</span></i>
+        </template>
+      </el-table-column>
       <el-table-column v-if="showEdit || showDelete" label="操作">
-
+        <template slot-scope="scope">
+          <el-button v-if="showEdit" size="small" @click="editArticle(scope.$index, scope.row)">编辑</el-button>
+          <el-button v-if="showDelete" size="small" type="danger" @click="deleteArticle(scope.$index, scope.row)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -42,6 +44,14 @@ export default {
     state: {
       type: Number,
       default: -1
+    },
+    showEdit: {
+      type: Boolean,
+      default: false
+    },
+    showDelete: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -50,10 +60,7 @@ export default {
       keywords: '',
       articleData: [],
       page: 1,
-      size: 10,
-      showEdit: false,
-      showDelete: false,
-      checkAll: false
+      size: 10
     }
   },
   mounted() {
@@ -62,56 +69,41 @@ export default {
     this.loading = false
   },
   methods: {
-    init() {
+    async init() {
       const requestData = {
         userId: this.$store.state.user.user.userId,
         state: this.state,
         page: this.page,
         size: this.size
       }
-      if (this.state === 0) {
-        this.showEdit = true
-        this.showDelete = true
-        getCurPageArticles(requestData).then(response => {
-          const { data } = response
-          if (response.code === 200) {
-            this.articleData = data
-          }
-        })
-      } else if (this.state === 1) {
-        getCurPageArticles(requestData).then(response => {
-          const { data } = response
-          if (response.code === 200) {
-            this.articleData = data
-          }
-        })
-      } else if (this.state === 2) {
-        getCurPageArticles(requestData).then(response => {
-          const { data } = response
-          if (response.code === 200) {
-            this.articleData = data
-          }
-        })
-      } else {
-        getCurPageArticles(requestData).then(response => {
-          const { data } = response
-          if (response.code === 200) {
-            this.articleData = data
-          }
-        })
-      }
+      await getCurPageArticles(requestData).then(response => {
+        const { data } = response
+        if (response.code === 200) {
+          this.articleData = data
+        }
+      })
     },
-    async searchClick() {
+    async searchClick(state) {
       this.loading = true
-      console.log(this.keywords)
       if (!this.keywords) {
         this.loading = false
-        this.$message.error('查询条件为空！')
+        const requestData = {
+          userId: this.$store.state.user.user.userId,
+          state: this.state,
+          page: this.page,
+          size: this.size
+        }
+        await getCurPageArticles(requestData).then(response => {
+          const { data } = response
+          if (response.code === 200) {
+            this.articleData = data
+          }
+        })
       } else {
+        this.articleData = []
         await getArticlesByTitle(this.keywords).then(response => {
           const { data } = response
-          if (data) {
-            this.articleData.length = 0
+          if (data && data.state === state) {
             this.articleData.push(data)
           } else {
             this.$message.error('查无此文章！')
@@ -132,6 +124,18 @@ export default {
       this.$router.push({
         path: '/user/profile'
       })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    editArticle(index, row) {
+      this.$router.push({
+        path: '/article/edit',
+        query: { article: row }
+      })
+    },
+    deleteArticle() {
+
     }
   }
 }

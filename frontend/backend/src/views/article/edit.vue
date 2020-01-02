@@ -8,7 +8,7 @@
               <el-input v-model="article.title" />
             </el-form-item>
             <el-form-item label="文章分类" prop="categoryName">
-              <el-select v-model="article.categoryName" placeholder="请选择文章分类" @change="getCategoryId">
+              <el-select v-model="article.category.categoryName" placeholder="请选择文章分类" @change="getCategoryId">
                 <el-option
                   v-for="(category, index) in categories"
                   :key="index"
@@ -91,8 +91,13 @@
               </div>
             </div>
             <el-form-item>
-              <el-button type="primary" @click.native.prevent="saveArticle(0)">保存到草稿箱</el-button>
-              <el-button type="primary" @click.native.prevent="saveArticle(1)">发表文章</el-button>
+              <div v-if="showSubmit">
+                <el-button type="primary" @click.native.prevent="saveArticle(0)">保存到草稿箱</el-button>
+                <el-button type="primary" @click.native.prevent="saveArticle(1)">发表文章</el-button>
+              </div>
+              <div v-else>
+                <el-button type="primary" @click.native.prevent="saveArticle(article.state)">保存</el-button>
+              </div>
             </el-form-item>
           </div>
         </el-card>
@@ -103,7 +108,7 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
-import { getArticleImg, saveArticle, uploadArticleImg } from '@/api/article'
+import { getArticleImg, saveArticle, putArticle, uploadArticleImg, getTagsByArticleId } from '@/api/article'
 import { isEmpty } from '@/utils'
 import { Message } from 'element-ui'
 export default {
@@ -119,10 +124,13 @@ export default {
       dialogVisible: false,
       isReadPassword: false,
       tags: ['标签一', '标签二', '标签三'],
-      categoryId: '',
       article: {
+        articleId: null,
         title: '',
-        categoryName: '',
+        category: {
+          categoryId: null,
+          categoryName: ''
+        },
         articleImg: '',
         mdContent: '',
         htmlContent: '',
@@ -131,13 +139,14 @@ export default {
         isRead: true,
         readPassword: ''
       },
+      showSubmit: true,
       rules: {
         title: [
           { required: true, message: '请输入文章标题', trigger: 'blur' }
-        ],
-        categoryName: [
-          { required: true, message: '请选择文章类别', trigger: 'change' }
         ]
+        // categoryName: [
+        //   { required: true, message: '请选择文章类别', trigger: 'change' }
+        // ]
       }
     }
   },
@@ -148,7 +157,21 @@ export default {
     ])
   },
   mounted() {
-    this.getArticleImg()
+    this.loading = true
+    if (this.$route.query.article.articleId) {
+      this.article = this.$route.query.article
+      getTagsByArticleId(this.article.articleId).then(response => {
+        const { data } = response
+        this.tags = data.map(tag => tag.tagName)
+        this.showSubmit = false
+      }, error => {
+        console.log(error)
+        this.$message({ type: 'error', message: '获取标签失败' })
+      })
+    } else {
+      this.getArticleImg()
+    }
+    this.loading = false
   },
   methods: {
     // 获取文章随机默认配图
@@ -164,17 +187,21 @@ export default {
     },
     // 获取当前文章的分类id
     getCategoryId() {
-      const curCategory = this.categories.filter(category => category.categoryName === this.article.categoryName)[0]
-      this.categoryId = curCategory.categoryId
+      const curCategory = this.categories.filter(category => category.categoryName === this.article.category.categoryName)[0]
+      this.article.category.categoryId = curCategory.categoryId
     },
     // 保存文章
-    saveArticle(state) {
+    async saveArticle(state) {
       this.$refs.articleForm.validate(valid => {
         if (!valid) {
           this.$message({ type: 'error', message: '数据不能为空!' })
           return false
         }
       })
+      if (!(isEmpty(this.article.category.categoryName))) {
+        this.$message({ type: 'error', message: '请选择文章类别!' })
+        return
+      }
       if (!(isEmpty(this.article.mdContent))) {
         this.$message({ type: 'error', message: '数据不能为空!' })
         return
@@ -185,21 +212,32 @@ export default {
       const data = {
         article: this.article,
         tags: this.tags,
-        category: this.categoryId,
         author: this.$store.state.user.user.userId
       }
-      saveArticle(data).then(response => {
-        this.loading = false
-        if (response.code === 200) {
-          this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
-          if (state === 1) {
-            this.$router.replace({ path: '/article/list' })
+      if (this.showSubmit) {
+        await saveArticle(data).then(response => {
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
+            if (state === 1) {
+              this.$router.replace({ path: '/article/list' })
+            }
           }
-        }
-      }, response => {
-        this.loading = false
-        this.$message({ type: 'error', message: state === 0 ? '保存草稿失败!' : '博客发布失败!' })
-      })
+        }, response => {
+          this.$message({ type: 'error', message: state === 0 ? '保存草稿失败!' : '博客发布失败!' })
+        })
+      } else {
+        await putArticle(data).then(response => {
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: state === 0 ? '保存成功!' : '发布成功!' })
+            if (state === 1) {
+              this.$router.replace({ path: '/article/list' })
+            }
+          }
+        }, response => {
+          this.$message({ type: 'error', message: state === 0 ? '保存草稿失败!' : '博客发布失败!' })
+        })
+      }
+      this.loading = false
     },
     /**
      * 添加图片，详见https://github.com/hinesboy/mavonEditor/blob/master/doc/cn/upload-images.md

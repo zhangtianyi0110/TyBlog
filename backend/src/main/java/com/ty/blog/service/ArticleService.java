@@ -5,6 +5,7 @@ import com.ty.blog.base.BaseService;
 import com.ty.blog.entity.Article;
 import com.ty.blog.entity.Comment;
 import com.ty.blog.entity.ResponseData;
+import com.ty.blog.entity.Tag;
 import com.ty.blog.entity.User;
 import com.ty.blog.util.BlogUtil;
 import com.ty.blog.util.JacksonUtil;
@@ -98,9 +99,8 @@ public class ArticleService extends BaseService {
      * @param map
      * @return
      */
-    public boolean saveArticle(Map<String, Object> map){
+    public boolean postArticle(Map<String, Object> map){
         Map<String, Object> articleMap = (Map<String, Object>) map.get("article");
-        articleMap.remove("categoryName");
         Article article = JacksonUtil.mapToBean(articleMap, Article.class);
         article.setSummary(HanLP.extractSummary(article.getHtmlContent().replaceAll("</?[^>]+>",""), 3).toString());
         article.setPublishDate(Calendar.getInstance().getTime());
@@ -118,11 +118,20 @@ public class ArticleService extends BaseService {
             article.setOriginalAuthor(author);
         }
         article.setTags(tagService.saveTags(new HashSet((List<String>) map.get("tags"))));
-        article.setCategory(categoryDao.findById(Long.valueOf(String.valueOf(map.get("category")))).get());
+        article.setCategory(categoryDao.findById(Long.valueOf(String.valueOf(article.getCategory().getCategoryId()))).get());
         article.setCreateTime(Calendar.getInstance().getTime());
         article.setModifyTime(Calendar.getInstance().getTime());
 
         articleDao.saveAndFlush(article);
+        return true;
+    }
+
+    /**
+     * 编辑文章
+     * @param map
+     * @return
+     */
+    public boolean putArticle(Article article){
         return true;
     }
 
@@ -168,4 +177,13 @@ public class ArticleService extends BaseService {
         return articleDao.findByTitle(title);
     }
 
+
+    /**
+     * 通过文章id获取文章标签
+     * @param articleId
+     * @return
+     */
+    public Set<Tag> getTagsByArticleId(Long articleId){
+        return articleDao.findById(articleId).get().getTags();
+    }
 }

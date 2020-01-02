@@ -6,9 +6,15 @@
           <!-- <article-tab :activeName="activeName" :showDelete="false" :showEdit="false" :showRestore="false" :state="-1" /> -->
           <article-tab :state="-1" />
         </el-tab-pane>
-        <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-        <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="草稿箱">
+          <article-tab :state="0" :show-edit="true" :show-delete="true" />
+        </el-tab-pane>
+        <el-tab-pane label="已发布">
+          <article-tab :state="1" />
+        </el-tab-pane>
+        <el-tab-pane label="回收站">
+          <article-tab :state="2" />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
 

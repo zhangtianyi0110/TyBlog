@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,7 +81,8 @@ public class ArticleController extends BaseController {
     }
 
 
-    @ApiOperation("获取文章所有评论")
+
+    @ApiOperation("通过标题获取指定状态文章")
     @GetMapping("/titles/{title}")
     public ResponseData getArticlesByTitle(@PathVariable("title") String title){
         Article article = articleService.getArticlesByTitle(title);
@@ -106,9 +108,9 @@ public class ArticleController extends BaseController {
     @ApiOperation("发布文章/草稿")
     @PostMapping
     @RequiresAuthentication
-    public ResponseData saveArticle(@RequestBody Map<String, Object> map){
+    public ResponseData postArticle(@RequestBody Map<String, Object> map){
 
-        boolean flag = articleService.saveArticle(map);
+        boolean flag = articleService.postArticle(map);
         if(flag){
             if("1".equals(map.get("articleState"))){
                 return ResponseUtil.success("文章发布成功");
@@ -117,6 +119,27 @@ public class ArticleController extends BaseController {
         }
         return ResponseUtil.failure(500, "发布失败");
     }
+
+
+    /**
+     * 编辑文章
+     * @param map
+     * @return
+     */
+    @ApiOperation("编辑文章")
+    @PutMapping
+    @RequiresAuthentication
+    public ResponseData putArticleImg(@RequestBody Map<String, Object> map) {
+        boolean flag = articleService.postArticle(map);
+        if(flag){
+            if("1".equals(map.get("articleState"))){
+                return ResponseUtil.success("文章发布成功");
+            }
+            return ResponseUtil.success("草稿保存成功");
+        }
+        return ResponseUtil.failure(500, "发布失败");
+    }
+
 
     /**
      * 上传文章内图片
@@ -129,6 +152,21 @@ public class ArticleController extends BaseController {
     public ResponseData uploadArticleImg(MultipartFile image) {
         return articleService.uploadArticleImg(request, image);
     }
+
+
+    /**
+     * 通过文章id获取文章标签
+     * @param articleId
+     * @return
+     */
+    @ApiOperation("通过文章id获取文章标签")
+    @GetMapping(value = "{articleId}/tags")
+    @RequiresAuthentication
+    public ResponseData getTagsByArticleId(@PathVariable("articleId") Long articleId) {
+        return ResponseUtil.success(articleService.getTagsByArticleId(articleId));
+    }
+
+
 
 
 }

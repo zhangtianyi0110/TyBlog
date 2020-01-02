@@ -63,6 +63,18 @@ export function saveArticle(data) {
 }
 
 /**
+ * 更新文章
+ * @param {文章对象} data
+ */
+export function putArticle(data) {
+  return request({
+    url: '/articles',
+    method: 'put',
+    data
+  })
+}
+
+/**
  * 上传文章内图片
  * @param {文章内图片} data
  */
@@ -82,6 +94,17 @@ export function uploadArticleImg(data) {
 export function getArticlesByTitle(title) {
   return request({
     url: '/articles/titles/' + title,
+    method: 'get'
+  })
+}
+
+/**
+ * 通過文章id获取文章标签
+ * @param {文章id} articleId
+ */
+export function getTagsByArticleId(articleId) {
+  return request({
+    url: '/articles/' + articleId + '/tags',
     method: 'get'
   })
 }
