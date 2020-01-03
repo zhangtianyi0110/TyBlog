@@ -158,7 +158,7 @@ export default {
   },
   mounted() {
     this.loading = true
-    if (this.$route.query.article.articleId) {
+    if (this.$route.query.article && this.$route.query.article.articleId) {
       this.article = this.$route.query.article
       getTagsByArticleId(this.article.articleId).then(response => {
         const { data } = response

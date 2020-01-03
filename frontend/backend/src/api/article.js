@@ -109,3 +109,14 @@ export function getTagsByArticleId(articleId) {
   })
 }
 
+/**
+ * 通过文章id修改文章state
+ * @param {文章id} articleId
+ * @param {要修改状态} state
+ */
+export function modifyArticleState(articleId, state) {
+  return request({
+    url: '/articles/' + articleId + '/states/' + state,
+    method: 'put'
+  })
+}

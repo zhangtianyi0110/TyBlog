@@ -7,13 +7,13 @@
           <article-tab :state="-1" />
         </el-tab-pane>
         <el-tab-pane label="草稿箱">
-          <article-tab :state="0" :show-edit="true" :show-delete="true" />
+          <article-tab :state="0" :show-edit="true" :show-move="true" />
         </el-tab-pane>
         <el-tab-pane label="已发布">
           <article-tab :state="1" />
         </el-tab-pane>
         <el-tab-pane label="回收站">
-          <article-tab :state="2" />
+          <article-tab :state="2" :show-restore="true" :show-delete="true" />
         </el-tab-pane>
       </el-tabs>
     </el-card>

@@ -28,16 +28,21 @@
       </el-table-column>
       <el-table-column v-if="showEdit || showDelete" label="操作">
         <template slot-scope="scope">
-          <el-button v-if="showEdit" size="small" @click="editArticle(scope.$index, scope.row)">编辑</el-button>
-          <el-button v-if="showDelete" size="small" type="danger" @click="deleteArticle(scope.$index, scope.row)">删除</el-button>
+          <el-button v-if="showEdit" size="small" type="primary" @click="editArticle(scope.$index, scope.row)">编辑</el-button>
+          <el-button v-if="showMove" size="small" type="warning" @click="moveArticleToRubbish(scope.$index, scope.row)">移入回收站</el-button>
+          <el-button v-if="showDelete" size="small" type="success" @click="restoreArticle(scope.$index, scope.row)">恢复</el-button>
+          <el-button v-if="showRestore" size="small" type="danger" @click="restoreArticle(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-button v-if="showMove" size="medium" type="warning" @click="deleteArticle(scope.$index, scope.row)">批量回收</el-button>
+    <el-button v-if="showDelete" size="medium" type="danger" @click="deleteArticle(scope.$index, scope.row)">批量删除</el-button>
+    <el-button v-if="showRestore" size="medium" type="success" @click="restoreArticle(scope.$index, scope.row)">批量恢复</el-button>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { getCurPageArticles, getArticlesByTitle } from '@/api/article'
+import { getCurPageArticles, getArticlesByTitle, modifyArticleState } from '@/api/article'
 export default {
   name: 'ArticleTab',
   props: {
@@ -49,7 +54,15 @@ export default {
       type: Boolean,
       default: false
     },
+    showMove: {
+      type: Boolean,
+      default: false
+    },
     showDelete: {
+      type: Boolean,
+      default: false
+    },
+    showRestore: {
       type: Boolean,
       default: false
     }
@@ -134,7 +147,22 @@ export default {
         query: { article: row }
       })
     },
-    deleteArticle() {
+    moveArticleToRubbish(index, row) {
+      const state = 2
+      modifyArticleState(row.articleId, state).then(response => {
+        const { data } = response
+        if (data) {
+          // this.articleData = this.articleData.filter(article => article.articleId !== row.articleId)
+          this.init()
+          this.$message.error('操作成功！')
+        } else {
+          this.$message.error('移入垃圾桶失败！')
+        }
+      }).catch(response => {
+        this.$message.error('操作出错！')
+      })
+    },
+    deleteArticle(index, row) {
 
     }
   }

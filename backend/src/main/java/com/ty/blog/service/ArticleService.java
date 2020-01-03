@@ -126,14 +126,6 @@ public class ArticleService extends BaseService {
         return true;
     }
 
-    /**
-     * 编辑文章
-     * @param map
-     * @return
-     */
-    public boolean putArticle(Article article){
-        return true;
-    }
 
     /**
      * 上传图片
@@ -186,4 +178,23 @@ public class ArticleService extends BaseService {
     public Set<Tag> getTagsByArticleId(Long articleId){
         return articleDao.findById(articleId).get().getTags();
     }
+
+    /**
+     * 通过文章id修改文章状态
+     * @param articleId
+     * @param state
+     * @return
+     */
+    public Boolean putStateByArticleId(Long articleId, Integer state){
+        Article article = articleDao.findById(articleId).get();
+        article.setState(state);
+        try {
+            articleDao.saveAndFlush(article);
+        }catch (Exception e){
+            log.error("发生异常：" + e);
+            return false;
+        }
+        return true;
+    }
+
 }

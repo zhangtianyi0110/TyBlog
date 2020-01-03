@@ -81,7 +81,11 @@ public class ArticleController extends BaseController {
     }
 
 
-
+    /**
+     * 通过标题获取指定状态文章
+     * @param title
+     * @return
+     */
     @ApiOperation("通过标题获取指定状态文章")
     @GetMapping("/titles/{title}")
     public ResponseData getArticlesByTitle(@PathVariable("title") String title){
@@ -164,6 +168,21 @@ public class ArticleController extends BaseController {
     @RequiresAuthentication
     public ResponseData getTagsByArticleId(@PathVariable("articleId") Long articleId) {
         return ResponseUtil.success(articleService.getTagsByArticleId(articleId));
+    }
+
+
+    /**
+     * 通过文章id改变文章state
+     * @param articleId
+     * @param state 2回收站
+     * @return
+     */
+    @ApiOperation("通过文章id改变文章state")
+    @PutMapping(value = "{articleId}/states/{state}")
+    @RequiresAuthentication
+    public ResponseData putStateByArticleId(@PathVariable("articleId") Long articleId,
+                                           @PathVariable("state") Integer state) {
+        return ResponseUtil.success(articleService.putStateByArticleId(articleId, state));
     }
 
 
