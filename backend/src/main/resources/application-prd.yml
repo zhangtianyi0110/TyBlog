@@ -9,7 +9,7 @@ spring:
   datasource:
     druid:
       # 数据库访问配置, 使用druid数据源
-      url: jdbc:mysql://127.0.0.1:3306/tyblog-prd?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
+      url: jdbc:mysql://127.0.0.1:3306/tyblog?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL
       username: root
       password: root
       # 连接池配置
