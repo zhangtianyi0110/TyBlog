@@ -27,7 +27,7 @@
         <swagger2.version>2.9.2</swagger2.version>
         <swagger-ui.version>2.9.2</swagger-ui.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.9</commons-lang3.version>
     </properties>
 
